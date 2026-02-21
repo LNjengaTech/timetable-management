@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15                #Docker checks if you have the official Postgres 15 image stored locally. If not, it downloads ("pulls") it from Docker Hub.
+    container_name: classflow-db      #Names the container "classflow-db" for easy identification.
+    restart: always                   #Ensures the container restarts automatically if it stops or the system reboots.
+    environment:
+      POSTGRES_USER: postgres          #Sets the database username to "postgres".
+      POSTGRES_PASSWORD: password      #Sets the database password to "password".
+      POSTGRES_DB: classflow           #Names the database "classflow".
+    ports:
+      - '5432:5432'                   #Maps port 5432 on the host to port 5432 in the container, allowing external access to the database.
+    volumes:
+      - classflow_data:/var/lib/postgresql/data #Persists the database data even if the container is removed or the system reboots.
+
+volumes:
+  classflow_data:
