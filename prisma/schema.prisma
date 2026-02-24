@@ -24,9 +24,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
   timetables    Timetable[]
-  attendances   Attendance[]
-  stats         UserStats?
-  createdAt     DateTime     @default(now())
+  attendances          Attendance[]
+  stats                UserStats?
+  notificationLeadTime Int          @default(30)
+  createdAt            DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 }
 

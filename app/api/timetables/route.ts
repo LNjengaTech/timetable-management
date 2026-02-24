@@ -16,8 +16,8 @@ export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session || (session.user.role !== "ADMIN" && session.user.role !== "LECTURER")) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+        if (!session) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
         const payload = await req.json();
@@ -29,12 +29,13 @@ export async function POST(req: Request) {
 
         const { day, time, subject, location, lecturer } = parsed.data;
 
-        // Conflict Check: existing slot with same day, time, and location
+        // Conflict Check: existing slot with same day, time, and location FOR THIS USER
         const existingSlot = await prisma.timetable.findFirst({
             where: {
                 day,
                 time,
                 location,
+                userId: session.user.id
             },
         });
 
@@ -69,6 +70,7 @@ export async function GET(req: Request) {
         }
 
         const timetables = await prisma.timetable.findMany({
+            where: { userId: session.user.id },
             orderBy: { createdAt: "desc" },
         });
 

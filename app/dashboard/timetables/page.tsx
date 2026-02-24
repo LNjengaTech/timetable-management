@@ -12,6 +12,7 @@ export default async function TimetablesPage() {
   }
 
   const timetables = await prisma.timetable.findMany({
+    where: { userId: session.user.id },
     orderBy: [
       { day: 'desc' },
       { time: 'asc' }
@@ -21,15 +22,21 @@ export default async function TimetablesPage() {
   return (
     <div className="max-w-7xl mx-auto p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-white">Manage Timetables</h1>
-        {["ADMIN", "LECTURER"].includes(session.user.role) && (
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Manage Timetables</h1>
+        <div className="flex items-center gap-3">
           <Link
             href="/dashboard/timetables/new"
-            className="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg transition-colors shadow-sm"
+            className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg transition-colors shadow-sm text-sm"
           >
-            + New Slot
+            + Manual Entry
           </Link>
-        )}
+          <Link
+            href="/dashboard/timetables/upload"
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 font-medium rounded-lg transition-colors shadow-sm text-sm"
+          >
+            Upload PDF/Image
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

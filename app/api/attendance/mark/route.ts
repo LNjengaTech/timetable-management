@@ -7,8 +7,8 @@ export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session || (session.user.role !== "STUDENT" && session.user.role !== "ADMIN")) {
-            return NextResponse.json({ message: "Only students can mark attendance" }, { status: 403 });
+        if (!session) {
+            return NextResponse.json({ message: "Only authenticated users can mark attendance" }, { status: 403 });
         }
 
         const { timetableId } = await req.json();
@@ -28,6 +28,11 @@ export async function POST(req: Request) {
 
         if (!timetable) {
             return NextResponse.json({ message: "Timetable slot not found" }, { status: 404 });
+        }
+
+        // Ensure this slot belongs to the current user (their personal schedule)
+        if (timetable.userId !== session.user.id) {
+            return NextResponse.json({ message: "You can only mark attendance for your own timetable slots" }, { status: 403 });
         }
 
         // Check if already marked for today

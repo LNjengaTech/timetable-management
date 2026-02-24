@@ -22,13 +22,21 @@ export async function GET(req: Request) {
         const currentHour = today.getHours();
         const currentMinute = today.getMinutes();
 
+        const dbUser = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { notificationLeadTime: true }
+        });
+
+        const leadTime = dbUser?.notificationLeadTime || 30;
+
         const timetables = await prisma.timetable.findMany({
             where: {
                 day: currentDayName,
+                userId: session.user.id
             }
         });
 
-        // Determine upcoming in next 30 minutes
+        // Determine upcoming based on user's preference
         const upcoming = timetables.filter(t => {
             const [tHour, tMin] = t.time.split(':').map(Number);
 
@@ -37,8 +45,8 @@ export async function GET(req: Request) {
 
             const diff = tTimeInMins - cTimeInMins;
 
-            // Between 0 and 30 minutes away
-            return diff > 0 && diff <= 30;
+            // Between 0 and leadTime away
+            return diff > 0 && diff <= leadTime;
         });
 
         return NextResponse.json({ upcoming }, { status: 200 });

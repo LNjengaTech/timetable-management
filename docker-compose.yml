@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   db:
@@ -10,9 +9,16 @@ services:
       POSTGRES_PASSWORD: password      #Sets the database password to "password".
       POSTGRES_DB: classflow           #Names the database "classflow".
     ports:
-      - '5432:5432'                   #Maps port 5432 on the host to port 5432 in the container, allowing external access to the database.
+      - '8080:8080'                   #Maps port 5432 on the host to port 5432 in the container, allowing external access to the database.
     volumes:
       - classflow_data:/var/lib/postgresql/data #Persists the database data even if the container is removed or the system reboots.
 
 volumes:
   classflow_data:
+
+
+#COMMANDS:
+
+#docker compose up -d
+#docker ps
+#docker compose down

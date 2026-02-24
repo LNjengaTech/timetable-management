@@ -4,7 +4,7 @@ This document outlines the detailed development phases of the **ClassFlow** Time
 
 ---
 
-## Phase 1: Foundation & Infrastructure Setup
+# PHASE 1: FOUNDATION & INFRASTRUCTURE SETUP
 
 **Objective**: Establish the core Next.js project structure, configure the PostgreSQL database with Prisma ORM, and set up the foundation for Role-Based Access Control (RBAC) authentication using NextAuth.js.
 
@@ -47,19 +47,16 @@ cd /home/lonnex/Desktop/projectsDir/Timetable/project
 
 sudo docker compose up -d
 ```
-*This command reads our docker-compose.yml file, downloads the PostgreSQL image if you don't have it, and starts it up running on port 5432.*
+*This reads the docker-compose.yml file, downloads the PostgreSQL image if there's none, and starts it up running on port 5432.*
 
-Verify it's running by typing `sudo docker ps`. You should see postgres:15-alpine listed.
+`sudo docker ps` - Verify it's running. should see postgres:15-alpine listed.
 
 **Step 2:** Push the Database Schema
-To actually create the tables (Users, Timetables, etc.) inside the created Database, instruct Prisma to push our schema.
+`npx prisma db push` - To create the tables, inside the created Database, instruct Prisma to push the schema.
 
-```bash
-npx prisma db push
-```
-*This command connects to the running Docker database via the DATABASE_URL in your .env file and creates all our tables.*
+*This command connects to the running Docker database via the DATABASE_URL in .env file and creates all the tables.*
 
-(Optional) can also run npx prisma studio to open a visual database browser on http://localhost:5555.
+`npx prisma studio` - (Optional) to open a visual database browser on http://localhost:5555.
 
 **Step 3:** Start the Next.js Application
 Now that the database is running and the tables exist, we can start the web app.
@@ -67,10 +64,11 @@ Now that the database is running and the tables exist, we can start the web app.
 ```bash
 npm run dev
 ```
+
 ---
 
 
-## Phase 2: Core Features (Timetables, Calendar & Attendance)
+# PHASE 2: CORE FEATURES (TIMETABLES, CALENDER & ATTENDANCE)
 
 **Objective**: Develop the primary business logic for managing timetable slots, providing an interactive calendar view, and enabling automated QR-code based attendance tracking.
 
