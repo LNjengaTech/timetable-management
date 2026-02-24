@@ -9,5 +9,5 @@
 
 No. We are not yet ready to proceed.
 We should implement these first:
-- Timetable management should include editing and deeleting
-- Timetable created by a user should only be visible to that user
+- Timetable management should include editing and deleting
+
