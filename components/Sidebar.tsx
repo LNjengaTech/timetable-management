@@ -33,8 +33,8 @@ export function Sidebar() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 z-40">
-        <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500">ClassFlow</h2>
+      <header className="md:hidden bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 md:flex md:justify-between md:items-center sticky top-0 z-40">
+        <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500 hidden md:block">ClassFlow</h2>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
@@ -46,7 +46,7 @@ export function Sidebar() {
       {/* Sidebar Overlay (Mobile) */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40 hidden md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -58,7 +58,7 @@ export function Sidebar() {
         isCollapsed ? "w-20" : "w-64"
       )}>
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          {!isCollapsed && <h2 className="text-2xl font-extrabold text-brand-600 dark:text-brand-500 tracking-tight shrink-0">ClassFlow</h2>}
+          {!isCollapsed && <h2 className="text-2xl font-extrabold text-brand-600 dark:text-brand-500 tracking-tight shrink-0 hidden md:block">ClassFlow</h2>}
           <div className={clsx("flex items-center", isCollapsed ? "mx-auto" : "")}>
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}

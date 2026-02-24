@@ -16,7 +16,7 @@ export default async function CalendarPage() {
   return (
     <div className="p-8 max-w-[1600px] mx-auto min-h-screen">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white">Interactive Calendar</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Interactive Calendar</h1>
         <p className="text-gray-400 mt-2">Manage and view timetable slots visually (Drag and Drop coming soon).</p>
       </div>
       
