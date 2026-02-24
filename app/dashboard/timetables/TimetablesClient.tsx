@@ -75,7 +75,7 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
     }, {})
 
     return (
-        <div className="max-w-7xl mx-auto p-8">
+        <div className="max-w-7xl overflow-x-auto mx-auto p-8">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <div>
@@ -108,6 +108,7 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
             )}
 
             {/* Grouped by day */}
+
             <div className="space-y-8">
                 {Object.entries(grouped).map(([day, daySlots]) => (
                     <div key={day}>
@@ -193,9 +194,13 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                 )
                             })}
                         </div>
+                        <hr className="my-8 border-gray-200 dark:border-gray-700"/>
                     </div>
+                    
                 ))}
+                
             </div>
+            
         </div>
     )
 }
