@@ -1,3 +1,6 @@
+// dashboard/settings/page.tsx
+
+// settings page - for users to manage their account preferences and personal configurations
 "use client"
 
 import { useState, useEffect } from "react"

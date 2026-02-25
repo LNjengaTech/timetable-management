@@ -1,3 +1,6 @@
+// api/user/settings/route.ts
+
+// user settings routes - for updating user settings
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

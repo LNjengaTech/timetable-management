@@ -1,4 +1,6 @@
+# docker-compose.yml
 
+# define and run multi-container Docker applications.
 services:
   db:
     image: postgres:15                #Docker checks if you have the official Postgres 15 image stored locally. If not, it downloads ("pulls") it from Docker Hub.

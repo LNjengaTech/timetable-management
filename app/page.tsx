@@ -1,3 +1,8 @@
+// page.tsx
+
+// root page component - for all pages
+
+
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

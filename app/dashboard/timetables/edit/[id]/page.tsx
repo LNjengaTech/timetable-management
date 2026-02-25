@@ -1,3 +1,7 @@
+// dashboard/timetables/edit/[id]/page.tsx
+
+// edit timetable page - for admin and lecturer users to edit timetable slots
+
 "use client"
 
 import { useState, useEffect } from "react"

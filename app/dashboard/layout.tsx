@@ -1,3 +1,7 @@
+// dashboard/layout.tsx
+
+// dashboard layout component - for admin and lecturer users to navigate between different pages
+
 import { Sidebar } from "@/components/Sidebar"
 
 export default function DashboardLayout({

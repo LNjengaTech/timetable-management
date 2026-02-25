@@ -1,3 +1,7 @@
+//components/Providers.tsx
+
+//Providers component for handling authentication and theme
+
 "use client"
 
 import { SessionProvider } from "next-auth/react"

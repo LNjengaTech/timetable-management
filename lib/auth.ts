@@ -1,3 +1,6 @@
+//lib/auth.ts
+
+//Authentication configuration for NextAuth and PrismaAdapter 
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"

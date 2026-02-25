@@ -1,3 +1,6 @@
+// api/timetables/route.ts
+
+// timetable routes - for creating a new timetable slot and fetching all timetable slots for the current user
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

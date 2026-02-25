@@ -1,3 +1,7 @@
+// dashboard/timetables/[id]/check-in/page.tsx
+
+// check-in page - for students to mark their attendance for a specific class
+
 "use client"
 
 import { useEffect, useState } from "react"

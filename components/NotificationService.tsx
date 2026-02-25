@@ -1,3 +1,7 @@
+//components/NotificationService.tsx
+
+//Notification service component for handling real-time notifications
+
 "use client"
 
 import { useEffect } from "react"

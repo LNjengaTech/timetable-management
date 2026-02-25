@@ -1,3 +1,6 @@
+// dashboard/admin/page.tsx
+
+// admin dashboard page - for admin users to manage users, adjust roles, and monitor system participants
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"

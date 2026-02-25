@@ -1,3 +1,6 @@
+// api/timetables/parse/route.ts
+
+// timetable parse routes - for parsing the timetable files uploaded by the user
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -38,7 +41,8 @@ async function extractFromPdf(buffer: Buffer): Promise<string> {
 
 async function extractFromImageOrScannedPdf(
     buffer: Buffer,
-    mimeType: string
+    mimeType: string,
+    fileName = "upload"
 ): Promise<string> {
     const apiKey = process.env.OCR_SPACE_API_KEY;
     if (!apiKey) throw new Error("OCR_SPACE_API_KEY not set in environment");
@@ -48,12 +52,12 @@ async function extractFromImageOrScannedPdf(
     form.append("isOverlayRequired", "false");
     form.append("detectOrientation", "true");
     form.append("scale", "true");
-    form.append("OCREngine", "2"); // Engine 2 is better for tables
-    // Cast to Uint8Array so TS accepts it as a valid BlobPart
+    form.append("OCREngine", "2"); //engine 2 is better for tables
+    //Cast to Uint8Array so TS accepts it as a valid BlobPart
     form.append(
         "file",
         new Blob([new Uint8Array(buffer)], { type: mimeType }),
-        "upload"
+        fileName //e.g "timetable.pdf" or "timetable.jpg"
     );
 
     const res = await fetch("https://api.ocr.space/parse/image", {
@@ -103,7 +107,7 @@ ${rawText.slice(0, 12000)}
     const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
 
-    // Strip any accidental markdown fences
+    //strip any accidental markdown fences
     const cleaned = text.replace(/^```json\s*/i, "").replace(/```\s*$/, "").trim();
     return JSON.parse(cleaned);
 }
@@ -134,14 +138,14 @@ export async function POST(req: Request) {
         if (name.endsWith(".xlsx") || name.endsWith(".xls") || name.endsWith(".csv")) {
             rawText = await extractFromXlsx(buffer);
         } else if (name.endsWith(".pdf")) {
-            // Try native text first; fall back to OCR if empty
+            //try native text first; fall back to OCR if empty
             rawText = await extractFromPdf(buffer);
             if (rawText.trim().length < 50) {
-                // Scanned PDF — hand to OCR.space
-                rawText = await extractFromImageOrScannedPdf(buffer, "application/pdf");
+                //scanned PDF — hand to OCR.space
+                rawText = await extractFromImageOrScannedPdf(buffer, "application/pdf", "upload.pdf");
             }
         } else if (mime.startsWith("image/")) {
-            rawText = await extractFromImageOrScannedPdf(buffer, mime);
+            rawText = await extractFromImageOrScannedPdf(buffer, mime, file.name);
         } else {
             return NextResponse.json(
                 { message: "Unsupported file type. Please upload PDF, XLSX, CSV, JPG, or PNG." },
@@ -169,7 +173,7 @@ export async function POST(req: Request) {
     } catch (err: any) {
         console.error("Parse API Error:", err);
         const message = err?.message || "Internal Server Error";
-        // Surface config issues clearly
+        //surface config issues clearly
         if (message.includes("API_KEY") || message.includes("api key")) {
             return NextResponse.json({ message: `Missing API key: ${message}` }, { status: 500 });
         }

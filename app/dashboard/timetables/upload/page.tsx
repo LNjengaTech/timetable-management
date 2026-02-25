@@ -1,3 +1,7 @@
+// dashboard/timetables/upload/page.tsx
+
+// upload timetable page - for admin and lecturer users to upload timetable slots
+
 "use client"
 
 import { useState, useCallback } from "react"

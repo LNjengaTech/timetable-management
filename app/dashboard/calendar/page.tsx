@@ -1,3 +1,6 @@
+// dashboard/calendar/page.tsx
+
+// calendar page - for admin and lecturer users to view and manage timetable slots visually
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import prisma from "@/lib/prisma"

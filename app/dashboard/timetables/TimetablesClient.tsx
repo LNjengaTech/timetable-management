@@ -1,3 +1,7 @@
+// dashboard/timetables/TimetablesClient.tsx
+
+// timetable client - for admin and lecturer users to view and manage timetable slots
+
 "use client"
 
 import { useState, useEffect, useCallback } from "react"

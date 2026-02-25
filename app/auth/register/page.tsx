@@ -1,3 +1,6 @@
+// auth/register/page.tsx
+
+// register page
 "use client"
 
 import { useState } from "react"

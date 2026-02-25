@@ -1,3 +1,7 @@
+// shared/[uuid]/page.tsx
+
+// shared timetable page - for students to view timetable slots
+
 import prisma from "@/lib/prisma"
 import { notFound } from "next/navigation"
 

@@ -1,3 +1,6 @@
+// dashboard/admin/AdminUsersClient.tsx
+
+// admin users client component - for fetching and displaying all users in the database and allowing the admin to update their roles and delete them
 "use client"
 
 import { useEffect, useState } from "react"

@@ -1,3 +1,7 @@
+// components/GamificationWidget.tsx
+
+// Gamification widget component for displaying user progress and stats in a week view 
+
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import prisma from "@/lib/prisma"

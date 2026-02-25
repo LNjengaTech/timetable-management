@@ -1,3 +1,7 @@
+// components/CalenderClient.tsx
+
+// Calendar component for client-side rendering and displaying timetables in a week view
+
 "use client"
 
 import { useMemo } from "react"

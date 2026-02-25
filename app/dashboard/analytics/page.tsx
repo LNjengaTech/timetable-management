@@ -1,3 +1,6 @@
+// dashboard/analytics/page.tsx
+
+// analytics dashboard page - for admin and lecturer users to monitor attendance trends and system metrics across all classes
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"

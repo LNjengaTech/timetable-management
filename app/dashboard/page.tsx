@@ -1,3 +1,6 @@
+// dashboard/page.tsx
+
+// dashboard page - for admin and lecturer users to navigate between different pages
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"

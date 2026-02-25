@@ -1,3 +1,7 @@
+// dashboard/timetables/new/page.tsx
+
+// new timetable page - for admin and lecturer users to create new timetable slots
+
 "use client"
 
 import { useState } from "react"

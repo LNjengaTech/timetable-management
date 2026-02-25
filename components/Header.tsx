@@ -1,3 +1,7 @@
+// components/Header.tsx
+
+//header component
+
 "use client"
 
 import { useState, useEffect } from "react"
