@@ -1,17 +1,19 @@
 // api/auth/register/route.ts
 
-// auth register routes
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password } = await req.json();
+        const { name, email, password, role } = await req.json();
 
         if (!name || !email || !password) {
             return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
         }
+
+        const validRoles = ["STUDENT", "LECTURER"];
+        const userRole = validRoles.includes(role) ? role : "STUDENT";
 
         const existingUser = await prisma.user.findUnique({
             where: { email },
@@ -28,7 +30,7 @@ export async function POST(req: Request) {
                 name,
                 email,
                 password: hashedPassword,
-                role: "STUDENT", // Defaulting to STUDENT for new registrations
+                role: userRole,
             },
         });
 

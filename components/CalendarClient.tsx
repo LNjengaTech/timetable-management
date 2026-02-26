@@ -25,7 +25,7 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-// Helper to map DB day string (e.g. "Monday", "08:00") to a real Date object in the current week
+// Helper to map DB day string (e.g "Monday", "08:00") to a real Date object in the current week
 function getNextDayOfWeek(dayName: string, timeStr: string) {
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   const targetDayIdx = days.indexOf(dayName)
