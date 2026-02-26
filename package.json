@@ -53,11 +53,6 @@
     "prisma": "^7.4.1",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "overrides": {
-    "react-joyride": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
   }
+
 } 
