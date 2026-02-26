@@ -54,7 +54,7 @@ export default function CalendarClient({ initialTimetables }: CalendarClientProp
       const start = getNextDayOfWeek(t.day, t.time)
       // Estimate 2 hrs duration for classes
       const end = new Date(start)
-      end.setHours(start.getHours() + 2)
+      end.setHours(start.getHours() + 3)
 
       return {
         id: t.id,
@@ -86,7 +86,7 @@ export default function CalendarClient({ initialTimetables }: CalendarClientProp
         .rbc-event { background-color: #3b82f6; border-radius: 5px; border: 1px solid #2563eb; padding: 4px; }
         .rbc-event.rbc-selected { background-color: #2563eb; }
         .rbc-allday-cell { display: none; }
-        .rbc-current-time-indicator { background-color: #ef4444; }
+        .rbc-current-time-indicator { background-color: #ef4444; height: 4px; }
       `}</style>
       <Calendar
         localizer={localizer}

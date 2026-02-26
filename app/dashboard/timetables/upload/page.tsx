@@ -31,6 +31,7 @@ export default function UploadTimetablePage() {
   const [errorMsg, setErrorMsg] = useState("")
   const [slots, setSlots] = useState<Slot[]>([])
   const [savedCount, setSavedCount] = useState(0)
+  const [instruction, setInstruction] = useState("")
 
   // ── file helpers ────────────────────────────────────────────────────────────
   const pickFile = (f: File) => {
@@ -59,6 +60,9 @@ export default function UploadTimetablePage() {
     try {
       const form = new FormData()
       form.append("file", file)
+      if (instruction.trim()) {
+        form.append("instruction", instruction.trim())
+      }
 
       const res = await fetch("/api/timetables/parse", { method: "POST", body: form })
       const data = await res.json()
@@ -142,8 +146,8 @@ export default function UploadTimetablePage() {
       {status !== "reviewing" && status !== "done" && (
         <div
           className={`border-2 border-dashed rounded-2xl p-12 text-center transition-colors cursor-pointer ${isDragging
-              ? "border-brand-500 bg-brand-50 dark:bg-brand-900/10"
-              : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+            ? "border-brand-500 bg-brand-50 dark:bg-brand-900/10"
+            : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
             }`}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
           onDragLeave={() => setIsDragging(false)}
@@ -163,19 +167,38 @@ export default function UploadTimetablePage() {
         </div>
       )}
 
-      {/* Extract button / AI thinking */}
+      {/* Extract button / AI thinking / Instruction Prompt */}
       {file && status === "idle" && (
-        <div className="mt-6 flex justify-end">
-          <button onClick={handleExtract} className="px-8 py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-xl shadow-lg shadow-brand-600/30 transition-all">
-            Extract with AI →
-          </button>
+        <div className="mt-8 space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+            <div className="flex items-center gap-2 mb-3 text-brand-600 dark:text-brand-400">
+              <Plus className="w-5 h-5 text-white bg-blue-600 rounded-full" />
+              <h3 className="font-bold">OPTIONAL: Tailor your extraction</h3>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              You Can Tell AI which course or units to look for (For example, &quot;use only units for BTIT/SEP2022-JFT&quot;).
+            </p>
+            <textarea
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+              placeholder="Enter instructions for AI (e.g. Filter by course code...)"
+              className="w-full h-32 p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all text-sm resize-none"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button onClick={handleExtract} className="px-10 py-4 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-2xl shadow-xl shadow-brand-600/30 transition-all flex items-center gap-2 group">
+              Extract with AI
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </div>
         </div>
       )}
 
       {status === "uploading" && (
         <div className="mt-10 flex flex-col items-center gap-4 py-12">
           <div className="relative">
-            <div className="w-20 h-20 rounded-full border-4 border-brand-200 dark:border-brand-900 border-t-brand-600 animate-spin" />
+            <div className="w-20 h-20 rounded-full border-4 border-brand-200 dark:border-blue border-t-brand-600 animate-spin" />
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-2xl">🤖</span>
             </div>
@@ -212,32 +235,32 @@ export default function UploadTimetablePage() {
 
           <div className="rounded-2xl border border-gray-200 dark:border-gray-700 overflow-x-auto shadow-sm">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+              <thead className="bg-gray-200 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                 <tr>
-                  {["Subject / Course", "Day", "Time (24h)", "Room / Location", "Lecturer", ""].map(h => (
+                  {["Subject / Course", "Day", "Time (24h)", "Room / Location", "Lecturer / Instructor", ""].map(h => (
                     <th key={h} className="px-4 py-3 text-left font-semibold">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {slots.map((slot, i) => (
-                  <tr key={i} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                  <tr key={i} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900! transition-colors">
                     <td className="px-3 py-2">
-                      <input value={slot.subject} onChange={e => updateSlot(i, "subject", e.target.value)} className="w-full bg-transparent text-gray-900 dark:text-white border-b border-transparent focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Subject" />
+                      <input value={slot.subject} onChange={e => updateSlot(i, "subject", e.target.value)} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Subject" />
                     </td>
                     <td className="px-3 py-2">
-                      <select value={slot.day} onChange={e => updateSlot(i, "day", e.target.value)} className="bg-transparent text-gray-900 dark:text-white border-b border-transparent focus:border-brand-500 outline-none py-1 cursor-pointer">
+                      <select value={slot.day} onChange={e => updateSlot(i, "day", e.target.value)} className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 cursor-pointer">
                         {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
                       </select>
                     </td>
                     <td className="px-3 py-2">
-                      <input type="time" value={slot.time} onChange={e => updateSlot(i, "time", e.target.value)} className="bg-transparent text-gray-900 dark:text-white border-b border-transparent focus:border-brand-500 outline-none py-1 transition-colors" />
+                      <input type="time" value={slot.time} onChange={e => updateSlot(i, "time", e.target.value)} className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" />
                     </td>
                     <td className="px-3 py-2">
-                      <input value={slot.location} onChange={e => updateSlot(i, "location", e.target.value)} className="w-full bg-transparent text-gray-900 dark:text-white border-b border-transparent focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Room" />
+                      <input value={slot.location} onChange={e => updateSlot(i, "location", e.target.value)} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Room" />
                     </td>
                     <td className="px-3 py-2">
-                      <input value={slot.lecturer} onChange={e => updateSlot(i, "lecturer", e.target.value)} className="w-full bg-transparent text-gray-900 dark:text-white border-b border-transparent focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Lecturer" />
+                      <input value={slot.lecturer} onChange={e => updateSlot(i, "lecturer", e.target.value)} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Lecturer" />
                     </td>
                     <td className="px-3 py-2">
                       <button onClick={() => removeSlot(i)} title="Remove row" className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">

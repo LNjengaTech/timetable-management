@@ -25,17 +25,17 @@ async function extractFromXlsx(buffer: Buffer): Promise<string> {
 
 
 async function extractFromPdf(buffer: Buffer): Promise<string> {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  //directly imported the library logic to bypass the buggy debug mode check
-  const pdfParse = require("pdf-parse/lib/pdf-parse.js");
-  try {
-    //no DOM-matrix needed
-    const data = await pdfParse(buffer);
-    return data.text;
-  } catch (error) {
-    console.error("PDF Parsing failed:", error);
-    throw new Error("Failed to parse PDF content.");
-  }
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    //directly imported the library logic to bypass the buggy debug mode check
+    const pdfParse = require("pdf-parse/lib/pdf-parse.js");
+    try {
+        //no DOM-matrix needed
+        const data = await pdfParse(buffer);
+        return data.text;
+    } catch (error) {
+        console.error("PDF Parsing failed:", error);
+        throw new Error("Failed to parse PDF content.");
+    }
 }
 
 
@@ -78,7 +78,7 @@ async function extractFromImageOrScannedPdf(
         .join("\n");
 }
 
-async function structureWithGemini(rawText: string): Promise<any[]> {
+async function structureWithGemini(rawText: string, instruction?: string): Promise<any[]> {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) throw new Error("GEMINI_API_KEY not set in environment");
 
@@ -99,10 +99,12 @@ Rules:
 - Omit any rows that are clearly not a class (headers, footers, totals).
 - Return ONLY a raw JSON array, no markdown fences, no explanation.
 
-Raw text:
 ---
 ${rawText.slice(0, 12000)}
----`;
+---
+
+${instruction ? `User Instruction/Constraint: "${instruction}"\nApply this constraint strictly when deciding which slots to include.` : ""}
+`;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
@@ -123,6 +125,7 @@ export async function POST(req: Request) {
 
         const formData = await req.formData();
         const file = formData.get("file") as File | null;
+        const instruction = formData.get("instruction") as string | null;
 
         if (!file) {
             return NextResponse.json({ message: "No file provided" }, { status: 400 });
@@ -160,7 +163,7 @@ export async function POST(req: Request) {
             );
         }
 
-        const slots = await structureWithGemini(rawText);
+        const slots = await structureWithGemini(rawText, instruction || undefined);
 
         if (!Array.isArray(slots) || slots.length === 0) {
             return NextResponse.json(

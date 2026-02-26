@@ -16,6 +16,7 @@ type Slot = {
     time: string
     location: string
     lecturer: string
+    isAttendedToday: boolean
 }
 
 const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -39,7 +40,9 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
     const [slots, setSlots] = useState<Slot[]>(initialSlots)
     const [deletingId, setDeletingId] = useState<string | null>(null)
     const [markingId, setMarkingId] = useState<string | null>(null)
-    const [markedIds, setMarkedIds] = useState<Set<string>>(new Set())
+    const [markedIds, setMarkedIds] = useState<Set<string>>(() =>
+        new Set(initialSlots.filter(s => s.isAttendedToday).map(s => s.id))
+    )
     const [tick, setTick] = useState(0)
 
     // Re-evaluate class windows every 60 seconds
@@ -100,14 +103,9 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
 
             {/* Empty state */}
             {slots.length === 0 && (
-                <div className="py-20 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl">
-                    <UploadCloud className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                <div className="py-20 text-center border-2 border border-gray-200 dark:border-gray-700 rounded-2xl">
                     <h2 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">No classes yet</h2>
-                    <p className="text-gray-400 text-sm mb-6">Add your first class manually or upload your timetable</p>
-                    <div className="flex justify-center gap-3">
-                        <Link href="/dashboard/timetables/new" className="px-5 py-2.5 bg-brand-600 text-white font-medium rounded-lg text-sm hover:bg-brand-500 transition-colors">+ Manual Entry</Link>
-                        <Link href="/dashboard/timetables/upload" className="px-5 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700">Upload PDF</Link>
-                    </div>
+                    <p className="text-gray-400 text-sm mb-6">Add your first class manually or upload your timetable for Parsing and schedule generation</p>
                 </div>
             )}
 
@@ -126,8 +124,8 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                     <div
                                         key={slot.id}
                                         className={`relative bg-white dark:bg-gray-800 border rounded-2xl p-5 flex flex-col gap-3 shadow-sm transition-all ${inWindow
-                                                ? "border-brand-400 dark:border-brand-600 ring-2 ring-brand-400/30 dark:ring-brand-600/30"
-                                                : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                                            ? "border-brand-400 dark:border-brand-600 ring-2 ring-brand-400/30 dark:ring-brand-600/30"
+                                            : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                                             }`}
                                     >
                                         {/* Active class badge */}
@@ -198,13 +196,13 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                 )
                             })}
                         </div>
-                        <hr className="my-8 border-gray-200 dark:border-gray-700"/>
+                        <hr className="my-8 border-gray-200 dark:border-gray-700" />
                     </div>
-                    
+
                 ))}
-                
+
             </div>
-            
+
         </div>
     )
 }

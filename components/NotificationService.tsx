@@ -51,8 +51,8 @@ export default function NotificationService() {
     // Initial check
     checkNotifications()
 
-    // Poll every 5 minutes (300000 ms)
-    const interval = setInterval(checkNotifications, 300000)
+    // Poll every 30 minutes (1800000 ms)
+    const interval = setInterval(checkNotifications, 1800000)
 
     return () => {
       isPolling = false

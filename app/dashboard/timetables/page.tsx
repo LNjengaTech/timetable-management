@@ -15,21 +15,34 @@ export default async function TimetablesPage() {
     redirect("/auth/login")
   }
 
-  const timetables = await prisma.timetable.findMany({
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const timetablesRaw = await prisma.timetable.findMany({
     where: { userId: session.user.id },
+    include: {
+      attendances: {
+        where: {
+          studentId: session.user.id,
+          date: { gte: today }
+        }
+      }
+    },
     orderBy: [
       { day: "asc" },
       { time: "asc" }
     ],
-    select: {
-      id: true,
-      subject: true,
-      day: true,
-      time: true,
-      location: true,
-      lecturer: true,
-    }
   })
+
+  const timetables = timetablesRaw.map(t => ({
+    id: t.id,
+    subject: t.subject,
+    day: t.day,
+    time: t.time,
+    location: t.location,
+    lecturer: t.lecturer,
+    isAttendedToday: t.attendances.length > 0
+  }))
 
   return <TimetablesClient initialSlots={timetables} />
 }

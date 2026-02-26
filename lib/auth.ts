@@ -48,20 +48,15 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user, trigger, session }) {
+            //Initial sign-in: transfer user data to the token
             if (user) {
-                token.id = user.id
-                token.role = user.role
-            }
-            if (token.id) {
-                const dbUser = await prisma.user.findUnique({
-                    where: { id: token.id as string },
-                    select: { role: true }
-                })
-                if (dbUser) {
-                    token.role = dbUser.role
-                }
-            }
-            return token
+        return {
+            ...token,
+            id: user.id,
+            role: user.role,
+        }
+    }
+    return token;
         },
         async session({ session, token }) {
             if (token && session.user) {
