@@ -103,7 +103,7 @@ export default function RegisterPage() {
                 type="email"
                 required
                 className="w-full px-5 py-4 mt-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white placeholder-gray-400"
-                placeholder="you@university.ac.ke"
+                placeholder="youremail@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />

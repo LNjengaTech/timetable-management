@@ -6,6 +6,11 @@ export default withAuth(
         const token = req.nextauth.token
         const path = req.nextUrl.pathname
 
+        // Skip checks for guest-accessible demo page
+        if (path === "/dashboard/demo") {
+            return NextResponse.next()
+        }
+
         if (path.startsWith("/admin") && token?.role !== "ADMIN") {
             return NextResponse.rewrite(new URL('/auth/login', req.url))
         }
@@ -16,13 +21,18 @@ export default withAuth(
         }
 
         // Students, Lecturers, and Admins can access dashboard
+        // But GUEST (from middleware's perspective, or if we want to force login for other dashboard paths)
         if (path.startsWith("/dashboard") && token?.role === "GUEST") {
             return NextResponse.rewrite(new URL('/auth/login', req.url))
         }
     },
     {
         callbacks: {
-            authorized: ({ token }) => !!token,
+            authorized: ({ token, req }) => {
+                const path = req.nextUrl.pathname
+                if (path === "/dashboard/demo") return true
+                return !!token
+            },
         },
     }
 )

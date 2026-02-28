@@ -82,14 +82,12 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
     }, {})
 
     return (
-        <div className="max-w-7xl overflow-x-auto mx-auto p-8">
+        <div className="max-w-7xl overflow-x-auto mx-auto md:p-8">
             {/* Header */}
-            <div className="flex justify-between items-center mb-8">
-                <div>
+            <div className="md:flex justify-between items-center mb-4">
+                <div className="my-4">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Timetable</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {slots.length} slot{slots.length !== 1 ? "s" : ""} in your schedule
-                    </p>
+
                 </div>
                 <div className="flex items-center gap-3">
                     <Link href="/dashboard/timetables/new" className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg transition-colors shadow-sm text-sm">
@@ -99,6 +97,10 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                         <UploadCloud className="w-4 h-4" /> Upload PDF/Image
                     </Link>
                 </div>
+            </div>
+
+            <div className="text-xs p-3 text-blue-300 dark:text-blue-800 mb-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+                {slots.length} slot{slots.length !== 1 ? "s" : ""} in your schedule
             </div>
 
             {/* Empty state */}

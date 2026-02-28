@@ -10,7 +10,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-[100dvh] bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors relative">
+    <div className="block md:flex min-h-[100dvh] bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors relative">
       <Sidebar />
       {/* Main Content Area */}
       <main className="flex-1 min-w-0 flex flex-col min-h-[100dvh]">
