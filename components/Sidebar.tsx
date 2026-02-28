@@ -12,7 +12,7 @@ import { Menu, X, Home, Calendar as CalendarIcon, PieChart, Settings, Users, Log
 import clsx from "clsx"
 
 export function Sidebar() {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(true)
     const [isCollapsed, setIsCollapsed] = useState(false) // Desktop collapse state
     const pathname = usePathname()
     const { data: session } = useSession()
@@ -37,11 +37,11 @@ export function Sidebar() {
     return (
         <>
             {/* Mobile Header */}
-            <header className="md:hidden bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 md:flex md:justify-between md:items-center sticky top-0 z-40">
-                <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500 hidden md:block">ClassFlow</h2>
+            <header className="md:hidden bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 z-40">
+                <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500  md:block">ClassFlow</h2>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                    className="border p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                 >
                     {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
@@ -61,21 +61,18 @@ export function Sidebar() {
                 isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
                 isCollapsed ? "w-20" : "w-64"
             )}>
-                <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div className="p-5.5 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     {!isCollapsed && <h2 className="text-2xl font-extrabold text-brand-600 dark:text-brand-500 tracking-tight shrink-0 hidden md:block">ClassFlow</h2>}
                     <div className={clsx("flex items-center", isCollapsed ? "mx-auto" : "")}>
                         <button
                             onClick={() => setIsCollapsed(!isCollapsed)}
-                            className="hidden md:flex p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                            className="border hidden md:flex p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                         >
                             <Menu className="w-5 h-5" />
                         </button>
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="md:hidden p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
+
+                        <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500  md:block">ClassFlow</h2>
+                        {/* <button onClick={() => setIsOpen(false)} className="md:hidden p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"></button> */}
                     </div>
                 </div>
 
@@ -136,7 +133,7 @@ export function Sidebar() {
                     <div className={clsx("flex items-center", isCollapsed ? "flex-col gap-2" : "justify-between")}>
                         <button
                             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                            className="theme-toggle p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                             title="Toggle theme"
                         >
                             {mounted ? (

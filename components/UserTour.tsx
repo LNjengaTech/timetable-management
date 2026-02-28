@@ -28,24 +28,34 @@ export default function UserTour() {
             placement: "center" as const,
         },
         {
+            target: "[href='/dashboard']",
+            content: "This is your dashboard. You can see your upcoming classes, your streak, points and more.",
+            placement: "bottom" as const,
+        },
+        {
             target: "[href='/dashboard/timetables']",
             content: "First, upload your timetable. Our AI will automatically extract your classes!",
-            placement: "right" as const,
+            placement: "bottom" as const,
         },
         {
             target: "[href='/dashboard/calendar']",
             content: "View your color-coded schedule in our interactive calendar.",
-            placement: "right" as const,
+            placement: "bottom" as const,
         },
         {
-            target: ".streak-stats", //added this class to a widget in the dashboard
+            target: "[href='/dashboard/gamification']", 
             content: "Track your attendance streaks and earn points for being consistent!",
             placement: "bottom" as const,
         },
         {
-            target: ".theme-toggle",
-            content: "Burning the midnight oil? Switch to dark mode here.",
+            target: "[href='/dashboard/settings']",
+            content: "Manage your profile and preferences here.",
             placement: "bottom" as const,
+        },
+        {
+            target: ".theme-toggle",//added this class to the theme toggle button in the header
+            content: "Burning the midnight oil? Switch to dark mode here.",
+            placement: "top" as const,
         },
     ]
 
@@ -67,7 +77,7 @@ export default function UserTour() {
             callback={handleJoyrideCallback}
             styles={{
                 options: {
-                    primaryColor: "#059669", // brand-600
+                    primaryColor: "#059669", //brand-600
                     zIndex: 1000,
                 },
             }}
