@@ -197,7 +197,7 @@ function LandingContent() {
               <Link href="#" className="hover:text-brand-600 transition-colors">Terms of Service</Link>
               <Link href="#" className="hover:text-brand-600 transition-colors">Contact Support</Link>
             </div>
-            <p className="text-sm text-gray-400">© {new Date().getFullYear()} ClassFlow. Made for Kenyan Scholars.</p>
+            <p className="text-sm text-gray-400">© {new Date().getFullYear()} ClassFlow. Made for you.</p>
           </div>
         </div>
       </footer>

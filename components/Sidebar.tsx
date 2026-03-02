@@ -71,7 +71,7 @@ export function Sidebar() {
                             <Menu className="w-5 h-5" />
                         </button>
 
-                        <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500  md:block">ClassFlow</h2>
+                        <h2 className="text-xl font-bold text-brand-600 dark:text-brand-500  md:hidden">ClassFlow</h2>
                         {/* <button onClick={() => setIsOpen(false)} className="md:hidden p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"></button> */}
                     </div>
                 </div>

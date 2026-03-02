@@ -43,7 +43,7 @@ export default function DemoDashboard() {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
             {/* Guest Banner */}
-            <div className="bg-brand-600 dark:bg-brand-700 text-white py-3 px-4 sticky top-0 z-50 shadow-md">
+            <div className="bg-brand-600 dark:bg-brand-700 text-white py-3 px-4 sticky top-0 shadow-md">
                 <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm font-medium flex items-center gap-2">
                         <Info className="w-4 h-4" />
