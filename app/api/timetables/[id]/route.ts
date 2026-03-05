@@ -9,6 +9,8 @@ import * as z from "zod";
 
 type Context = { params: Promise<{ id: string }> };
 
+
+//handler to get / fetch the selected timetable slot
 export async function GET(_req: Request, { params }: Context) {
     try {
         const { id } = await params;
@@ -34,6 +36,7 @@ const updateSchema = z.object({
     lecturer: z.string().min(1),
 });
 
+//handler to insert the editted timetable slot
 export async function PUT(req: Request, { params }: Context) {
     try {
         const { id } = await params;
@@ -64,10 +67,13 @@ export async function PUT(req: Request, { params }: Context) {
     }
 }
 
+//handler to delete the selected timetable slot
 export async function DELETE(_req: Request, { params }: Context) {
     try {
         const { id } = await params;
+        
         const session = await getServerSession(authOptions);
+
         if (!session) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }

@@ -33,8 +33,9 @@ export default async function DashboardPage() {
   })
 
   // Fetch all slots to calculate attendance rate properly
-  const totalClasses = await prisma.timetable.count({
-    where: { userId: session.user.id }
+  const allSlots = await prisma.timetable.findMany({
+    where: { userId: session.user.id },
+    select: { day: true }
   })
 
   // Fetch all attendance records
@@ -43,13 +44,35 @@ export default async function DashboardPage() {
     select: { date: true, timetable: { select: { day: true } } }
   })
 
+  // Fetch user to know when to start counting from
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { createdAt: true }
+  });
+
   // Dynamic Attendance Rate calculation:
-  // (Total attended) / (Total possible slots since joined or last 30 days)
-  // For now, using a denominator that grows with user activity.
-  // Capped at 100%.
-  const attendanceRate = totalClasses > 0 && allAttendances.length > 0
-    ? Math.min(100, Math.round((allAttendances.length / (totalClasses * 2)) * 100))
-    : 0
+  // Count exact occurrences of scheduled days since account creation (or the last 30 days maximum for a fresher view)
+  let totalPossibleOccurrences = 0;
+  const dayOccurrences: Record<string, number> = { 'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0, 'Sunday': 0 };
+
+  if (user && allSlots.length > 0) {
+    const start = user.createdAt;
+    const end = new Date();
+
+    // If start is extremely old, cap it to maybe the start of the current year or semester. For now just use createdAt.
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dayName = format(d, 'EEEE');
+      dayOccurrences[dayName]++;
+
+      const slotsOnDay = allSlots.filter(s => s.day === dayName).length;
+      totalPossibleOccurrences += slotsOnDay;
+    }
+  }
+
+  const maxPossible = Math.max(1, totalPossibleOccurrences);
+  const attendanceRate = totalPossibleOccurrences > 0
+    ? Math.min(100, Math.round((allAttendances.length / maxPossible) * 100))
+    : 0;
 
   // Dynamic Attendance Trends calculation:
   const dayCounts = { 'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0 }
@@ -60,9 +83,25 @@ export default async function DashboardPage() {
     }
   })
 
+  // Calculate percentage per day for the trend chart
+  const getTrendPct = (shortName: string, fullName: string) => {
+    const attended = dayCounts[shortName as keyof typeof dayCounts];
+    const possible = dayOccurrences[fullName] * allSlots.filter(s => s.day === fullName).length;
+    if (possible === 0) return 0;
+    return Math.min(100, Math.round((attended / possible) * 100));
+  };
+
   const attendanceTrend = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    data: [dayCounts.Mon, dayCounts.Tue, dayCounts.Wed, dayCounts.Thu, dayCounts.Fri, dayCounts.Sat, dayCounts.Sun].map(c => Math.min(100, c * 20))
+    data: [
+      getTrendPct('Mon', 'Monday'),
+      getTrendPct('Tue', 'Tuesday'),
+      getTrendPct('Wed', 'Wednesday'),
+      getTrendPct('Thu', 'Thursday'),
+      getTrendPct('Fri', 'Friday'),
+      getTrendPct('Sat', 'Saturday'),
+      getTrendPct('Sun', 'Sunday')
+    ]
   }
 
   // Fetch recent activities (Attendances)
@@ -100,7 +139,7 @@ export default async function DashboardPage() {
             streak={stats?.currentStreak || 0}
             points={stats?.points || 0}
             attendanceRate={attendanceRate}
-            totalClasses={totalClasses}
+            totalClasses={totalPossibleOccurrences}
           />
 
           <DashboardClient
@@ -127,7 +166,7 @@ export default async function DashboardPage() {
               <div className="h-2 bg-white/20 rounded-full overflow-hidden">
                 <div className="h-full bg-white w-3/4 rounded-full" />
               </div>
-              
+
             </div>
           </div>
         </>

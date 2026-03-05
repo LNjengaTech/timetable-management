@@ -13,6 +13,7 @@ export async function POST(req: Request) {
         }
 
         const validRoles = ["STUDENT", "LECTURER"];
+        
         const userRole = validRoles.includes(role) ? role : "STUDENT";
 
         const existingUser = await prisma.user.findUnique({

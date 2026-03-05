@@ -1,5 +1,8 @@
 // components/RecentActivity.tsx
 
+"use client"
+
+import { useEffect, useState } from "react"
 import { History, Check, Clock, Plus } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
@@ -11,6 +14,15 @@ interface Activity {
 }
 
 export default function RecentActivity({ activities }: { activities: Activity[] }) {
+    const [, setTick] = useState(0)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTick(t => t + 1)
+        }, 60000) // Update every minute
+        return () => clearInterval(timer)
+    }, [])
+
     const getIcon = (type: Activity["type"]) => {
         switch (type) {
             case "ATTENDANCE": return <Check className="w-4 h-4 text-emerald-500" />

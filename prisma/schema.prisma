@@ -105,12 +105,23 @@ model Attendance {
 }
 
 model UserStats {
-  id             String    @id @default(cuid())
-  userId         String    @unique
-  points         Int       @default(0)
-  currentStreak  Int       @default(0)
-  longestStreak  Int       @default(0)
-  lastAttendance DateTime?
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  points                Int       @default(0)
+  
+  // Streaks
+  currentStreak         Int       @default(0) // Used for daily check-ins
+  classAttendanceStreak Int       @default(0)
+  longestStreak         Int       @default(0) 
+  
+  lastCheckIn           DateTime?
+  lastAttendance        DateTime?
+  
+  // Weekly Perfection tracking
+  perfectWeeks          Int       @default(0)
+
+  // Badges array
+  badges                String[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

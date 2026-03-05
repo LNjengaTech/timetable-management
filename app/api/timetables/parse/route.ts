@@ -9,7 +9,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-// ── helpers ──────────────────────────────────────────────────────────────────
+//HELPERS FUNTIONS
 
 async function extractFromXlsx(buffer: Buffer): Promise<string> {
     const XLSX = await import("xlsx");
@@ -52,7 +52,7 @@ async function extractFromImageOrScannedPdf(
     form.append("isOverlayRequired", "false");
     form.append("detectOrientation", "true");
     form.append("scale", "true");
-    form.append("OCREngine", "2"); //engine 2 is better for tables
+    form.append("OCREngine", "2"); //engine 2 because it is better for tables
     //Cast to Uint8Array so TS accepts it as a valid BlobPart
     form.append(
         "file",
@@ -109,12 +109,12 @@ ${instruction ? `User Instruction/Constraint: "${instruction}"\nApply this const
     const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
 
-    //strip any accidental markdown fences
+    //strip any accidental markdown fences if AI didn't remove
     const cleaned = text.replace(/^```json\s*/i, "").replace(/```\s*$/, "").trim();
     return JSON.parse(cleaned);
 }
 
-// ── handler ───────────────────────────────────────────────────────────────────
+// ──  HANDLER
 
 export async function POST(req: Request) {
     try {

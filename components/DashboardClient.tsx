@@ -117,8 +117,8 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
                                         layoutId={slot.id}
                                         onClick={() => setSelectedSlot(selectedSlot === slot.id ? null : slot.id)}
                                         className={`flex gap-4 group cursor-pointer p-4 rounded-xl border transition-all ${status === "now"
-                                                ? "border-brand-500 bg-brand-50/50 dark:bg-brand-900/10 shadow-sm"
-                                                : "border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                                            ? "border-brand-500 bg-brand-50/50 dark:bg-brand-900/10 shadow-sm"
+                                            : "border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
                                             }`}
                                     >
                                         <div className="w-20 text-sm font-bold text-gray-500 dark:text-gray-400 pt-1">{slot.time}</div>
@@ -138,7 +138,7 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
                                                         <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
                                                     )}
                                                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter ${status === "now" ? "bg-green-100 border-green-900 text-green-700" :
-                                                            status === "upcoming" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"
+                                                        status === "upcoming" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"
                                                         }`}>
                                                         {status}
                                                     </span>
@@ -154,11 +154,22 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
                                                         className="overflow-hidden pt-4 mt-4 border-t border-gray-100 dark:border-gray-700"
                                                     >
                                                         <div className="flex gap-2 text-sm">
-                                                            <button className="flex-1 py-1.5 px-3 bg-brand-600 text-white rounded-lg font-bold text-xs hover:bg-brand-500 transition-colors">
+                                                            <button
+                                                                onClick={async (e) => {
+                                                                    e.stopPropagation();
+                                                                    try {
+                                                                        await fetch('/api/attendance/mark', {
+                                                                            method: 'POST',
+                                                                            headers: { 'Content-Type': 'application/json' },
+                                                                            body: JSON.stringify({ timetableId: slot.id })
+                                                                        });
+                                                                        window.location.reload();
+                                                                    } catch (err) {
+                                                                        console.error(err);
+                                                                    }
+                                                                }}
+                                                                className="flex-1 py-1.5 px-3 bg-brand-600 text-white rounded-lg font-bold text-xs hover:bg-brand-500 transition-colors">
                                                                 Mark Attended
-                                                            </button>
-                                                            <button className="flex-1 py-1.5 px-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-bold text-xs hover:bg-gray-200 transition-colors">
-                                                                View Details
                                                             </button>
                                                         </div>
                                                     </motion.div>

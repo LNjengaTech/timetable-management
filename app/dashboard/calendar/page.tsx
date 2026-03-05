@@ -14,7 +14,9 @@ export default async function CalendarPage() {
     redirect("/auth/login")
   }
 
-  const timetables = await prisma.timetable.findMany()
+  const timetables = await prisma.timetable.findMany({
+    where: { userId: session.user.id }
+  })
 
   return (
     <div className="md:p-8 max-w-[1600px] mx-auto min-h-screen">
@@ -22,7 +24,7 @@ export default async function CalendarPage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Interactive Calendar</h1>
         <p className="text-gray-400 mt-2">Manage and view timetable slots visually (Drag and Drop coming soon).</p>
       </div>
-      
+
       <div className="bg-gray-800 p-6 border border-gray-700 rounded-2xl shadow-xl overflow-hidden min-h-[700px]">
         {/* Pass server-side fetched timetables as initial data */}
         <CalendarClient initialTimetables={timetables} />
