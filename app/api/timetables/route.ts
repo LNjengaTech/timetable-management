@@ -12,7 +12,8 @@ const timetableSchema = z.object({
     time: z.string().min(1, "Time is required"),
     subject: z.string().min(1, "Subject is required"),
     location: z.string().min(1, "Location is required"),
-    lecturer: z.string().min(1, "Lecturer is required"),
+    lecturer: z.string().optional(),
+    className: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Invalid input data", errors: parsed.error.format() }, { status: 400 });
         }
 
-        const { day, time, subject, location, lecturer } = parsed.data;
+        const { day, time, subject, location, lecturer, className } = parsed.data;
 
         // Conflict Check: existing slot with same day, time, and location FOR THIS USER
         const existingSlot = await prisma.timetable.findFirst({
@@ -46,13 +47,18 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Conflict detected: slot exists at this day/time/location." }, { status: 409 });
         }
 
+        // Ensure the required field based on the role is provided or default it
+        const finalLecturer = lecturer || (session.user.role !== "LECTURER" ? "TBA" : "");
+        const finalClassName = className || (session.user.role === "LECTURER" ? "TBA" : null);
+
         const timetable = await prisma.timetable.create({
             data: {
                 day,
                 time,
                 subject,
                 location,
-                lecturer,
+                lecturer: finalLecturer,
+                className: finalClassName,
                 userId: session.user.id,
             },
         });

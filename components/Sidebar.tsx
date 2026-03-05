@@ -28,7 +28,7 @@ export function Sidebar() {
     const navigation = [
         { name: "Overview", href: "/dashboard", icon: Home, show: true },
         { name: "Manage Slots", href: "/dashboard/timetables", icon: Table, show: true },
-        { name: "Interactive Calendar", href: "/dashboard/calendar", icon: CalendarIcon, show: true },
+        { name: "Interactive Calendar", href: "/dashboard/calendar", icon: CalendarIcon, show: role === "STUDENT" },
         { name: "Rewards & Streak", href: "/dashboard/gamification", icon: Trophy, show: role === "STUDENT" },
         { name: "Analytics", href: "/dashboard/analytics", icon: PieChart, show: ["ADMIN", "LECTURER"].includes(role || "") },
         { name: "Settings", href: "/dashboard/settings", icon: Settings, show: true },
@@ -107,7 +107,7 @@ export function Sidebar() {
                                 )}
                             >
                                 <Users className="w-5 h-5 shrink-0" />
-                                {!isCollapsed && <span>Admin Portal</span>}
+                                {!isCollapsed && <span>Manage Users</span>}
                                 {isCollapsed && <span className="absolute left-full ml-4 px-2 py-1 bg-red-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none z-50">Admin Portal</span>}
                             </Link>
                         </div>

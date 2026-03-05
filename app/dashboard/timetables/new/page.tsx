@@ -9,21 +9,29 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 
 const timetableSchema = z.object({
   day: z.string().min(1, "Day is required"),
   time: z.string().min(1, "Time is required"),
   subject: z.string().min(1, "Subject is required"),
   location: z.string().min(1, "Location is required"),
-  lecturer: z.string().min(1, "Lecturer is required"),
+  lecturer: z.string().optional(),
+  className: z.string().optional(),
+}).refine(data => data.lecturer || data.className, {
+  message: "Either Lecturer or Class Name is required",
+  path: ["lecturer"]
 })
 
 type TimetableFormValues = z.infer<typeof timetableSchema>
 
 export default function NewTimetablePage() {
   const router = useRouter()
+  const { data: session } = useSession()
+  const isLecturer = session?.user?.role === "LECTURER"
+
   const [serverError, setServerError] = useState("")
-  
+
   const {
     register,
     handleSubmit,
@@ -38,7 +46,7 @@ export default function NewTimetablePage() {
 
   const onSubmit = async (data: TimetableFormValues) => {
     setServerError("")
-    
+
     try {
       const res = await fetch("/api/timetables", {
         method: "POST",
@@ -63,7 +71,7 @@ export default function NewTimetablePage() {
   return (
     <div className="max-w-2xl mx-auto p-6 bg-gray-800 border border-gray-700 rounded-xl shadow-lg mt-8">
       <h1 className="text-2xl font-bold mb-6 text-white text-center">Create Timetable Slot</h1>
-      
+
       {serverError && (
         <div className="p-4 mb-6 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg">
           {serverError}
@@ -123,17 +131,30 @@ export default function NewTimetablePage() {
             {errors.location && <p className="mt-1 text-sm text-red-400">{errors.location.message}</p>}
           </div>
 
-          {/* Lecturer */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Lecturer</label>
-            <input
-              type="text"
-              placeholder="e.g. Dr. Kamau"
-              {...register("lecturer")}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-white placeholder-gray-500"
-            />
-            {errors.lecturer && <p className="mt-1 text-sm text-red-400">{errors.lecturer.message}</p>}
-          </div>
+          {/* Dynamic Field: Lecturer or Class Name */}
+          {isLecturer ? (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Class Name</label>
+              <input
+                type="text"
+                placeholder="e.g. BSCS Year 1"
+                {...register("className")}
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-white placeholder-gray-500"
+              />
+              {errors.className && <p className="mt-1 text-sm text-red-400">{errors.className.message}</p>}
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Lecturer</label>
+              <input
+                type="text"
+                placeholder="e.g. Dr. Kamau"
+                {...register("lecturer")}
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg outline-none focus:ring-2 focus:ring-brand-500 text-white placeholder-gray-500"
+              />
+              {errors.lecturer && <p className="mt-1 text-sm text-red-400">{errors.lecturer.message}</p>}
+            </div>
+          )}
         </div>
 
         <button

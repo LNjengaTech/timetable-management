@@ -73,6 +73,7 @@ model Timetable {
   subject     String
   location    String
   lecturer    String
+  className   String?      // Used by Lecturers when uploading their schedule
   userId      String
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   attendances Attendance[]

@@ -41,6 +41,7 @@ export default async function TimetablesPage() {
     time: t.time,
     location: t.location,
     lecturer: t.lecturer,
+    className: (t as any).className,
     isAttendedToday: t.attendances.length > 0
   }))
 

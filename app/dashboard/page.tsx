@@ -128,56 +128,74 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Dashboard</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">Welcome back, {session.user.name || session.user.email}.</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 rounded-full border border-brand-100 dark:border-brand-800 text-sm font-bold shadow-sm capitalize">
-          Role: {session.user.role.toLowerCase()}
-        </div>
+        {/* <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400 rounded-full border border-brand-100 dark:border-brand-800 text-sm font-bold shadow-sm capitalize">
+          {session.user.role.toLowerCase()}
+        </div> */}
       </div>
 
-      {session.user.role === "STUDENT" ? (
-        <>
-          <StatsGrid
-            streak={stats?.currentStreak || 0}
-            points={stats?.points || 0}
-            attendanceRate={attendanceRate}
-            totalClasses={totalPossibleOccurrences}
-          />
-
-          <DashboardClient
-            todaySlots={todaySlots.map(s => ({
-              id: s.id,
-              subject: s.subject,
-              time: s.time,
-              location: s.location,
-              lecturer: s.lecturer
-            }))}
-            attendanceTrend={attendanceTrend}
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <RecentActivity activities={activities} />
-            </div>
-
-            <div className="bg-gradient-to-br from-brand-600 to-brand-800 p-8 rounded-3xl text-white shadow-xl shadow-brand-500/20 flex flex-col justify-center">
-              <h3 className="text-2xl font-bold mb-4">Stay Consistent!</h3>
-              <p className="text-brand-100 mb-8 leading-relaxed">
-                Consistent attendance leads to better grades and cool badges. Check your progress in the analytics tab.
+      <div className="lg:col-span-2">
+          {session.user.role === "LECTURER" ? (
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+              <h2 className="text-2xl font-bold mb-4">Instructor Dashboard</h2>
+              <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                Use the sidebar to manage your class slots and view your schedule.
               </p>
-              <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                <div className="h-full bg-white w-3/4 rounded-full" />
-              </div>
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+              <h2 className="text-2xl font-bold mb-4">Student Dashboard</h2>
+              <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                Use the sidebar to manage your class slots and view your schedule.
+              </p>
+            </div>
+          )}
+        </div>
 
+      <StatsGrid
+        streak={stats?.currentStreak || 0}
+        points={stats?.points || 0}
+        attendanceRate={attendanceRate}
+        totalClasses={totalPossibleOccurrences}
+      />
+
+      <DashboardClient
+        todaySlots={todaySlots.map(s => ({
+          id: s.id,
+          subject: s.subject,
+          time: s.time,
+          location: s.location,
+          lecturer: s.lecturer,
+          className: (s as any).className
+        }))}
+        attendanceTrend={attendanceTrend}
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          {session.user.role === "STUDENT" ? (
+            <RecentActivity activities={activities} />
+          ) : (
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+              {/* <h2 className="text-2xl font-bold mb-4">Instructor Portal</h2>
+              <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                Use the sidebar to manage your class slots and view your schedule.
+              </p> */}
+            </div>
+          )}
+        </div>
+
+        {session.user.role === "STUDENT" && (
+          <div className="bg-gradient-to-br from-brand-600 to-brand-800 p-8 rounded-3xl text-white shadow-xl shadow-brand-500/20 flex flex-col justify-center">
+            <h3 className="text-2xl font-bold mb-4">Stay Consistent!</h3>
+            <p className="text-brand-100 mb-8 leading-relaxed">
+              Consistent attendance leads to better grades and cool badges. Check your progress in the analytics tab.
+            </p>
+            <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div className="h-full bg-white w-3/4 rounded-full" />
             </div>
           </div>
-        </>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm text-center">
-          <h2 className="text-2xl font-bold mb-4">Instructor Dashboard</h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-            As a {session.user.role.toLowerCase()}, you can manage class groups, upload departmental timetables, and monitor overall attendance. Use the sidebar to navigate to your specific portals.
-          </p>
-        </div>
-      )}
+        )}
+      </div>
     </main>
   )
 }

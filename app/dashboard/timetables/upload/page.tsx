@@ -10,6 +10,7 @@ import {
     UploadCloud, FileType2, ImageIcon, FileSpreadsheet,
     Loader2, CheckCircle2, AlertCircle, Plus, Trash2
 } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
@@ -18,13 +19,16 @@ type Slot = {
     day: string
     time: string
     location: string
-    lecturer: string
+    lecturer?: string
+    className?: string
 }
 
 type Status = "idle" | "uploading" | "reviewing" | "saving" | "done" | "error"
 
 export default function UploadTimetablePage() {
     const router = useRouter()
+    const { data: session } = useSession()
+    const isLecturer = session?.user?.role === "LECTURER"
     const [file, setFile] = useState<File | null>(null)
     const [isDragging, setIsDragging] = useState(false)
     const [status, setStatus] = useState<Status>("idle")
@@ -85,7 +89,7 @@ export default function UploadTimetablePage() {
     const removeSlot = (i: number) => setSlots(prev => prev.filter((_, idx) => idx !== i))
 
     const addEmptySlot = () => {
-        setSlots(prev => [...prev, { subject: "", day: "Monday", time: "08:00", location: "", lecturer: "" }])
+        setSlots(prev => [...prev, { subject: "", day: "Monday", time: "08:00", location: "", [isLecturer ? "className" : "lecturer"]: "" }])
     }
 
     // ── bulk save ───────────────────────────────────────────────────────────────
@@ -237,8 +241,8 @@ export default function UploadTimetablePage() {
                         <table className="w-full text-sm">
                             <thead className="bg-gray-200 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                                 <tr>
-                                    {["Subject / Course", "Day", "Time (24h)", "Room / Location", "Lecturer / Instructor", ""].map(h => (
-                                        <th key={h} className="px-4 py-3 text-left font-semibold">{h}</th>
+                                    {["Subject / Course", "Day", "Time (24h)", "Room / Location", isLecturer ? "Class Name" : "Lecturer / Instructor", ""].map((h, i) => (
+                                        <th key={i} className="px-4 py-3 text-left font-semibold">{h}</th>
                                     ))}
                                 </tr>
                             </thead>
@@ -260,7 +264,7 @@ export default function UploadTimetablePage() {
                                             <input value={slot.location} onChange={e => updateSlot(i, "location", e.target.value)} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Room" />
                                         </td>
                                         <td className="px-3 py-2">
-                                            <input value={slot.lecturer} onChange={e => updateSlot(i, "lecturer", e.target.value)} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" placeholder="Lecturer" />
+                                            <input value={slot.className || slot.lecturer || ""} onChange={e => updateSlot(i, isLecturer ? "className" : "lecturer", e.target.value)} className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 focus:border-brand-500 outline-none py-1 transition-colors" placeholder={isLecturer ? "Class Name" : "Lecturer"} />
                                         </td>
                                         <td className="px-3 py-2">
                                             <button onClick={() => removeSlot(i)} className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">

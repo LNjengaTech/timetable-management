@@ -16,6 +16,7 @@ type Slot = {
     time: string
     location: string
     lecturer: string
+    className?: string | null
     isAttendedToday: boolean
 }
 
@@ -158,7 +159,7 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <User className="w-3.5 h-3.5 shrink-0" />
-                                                <span className="truncate">{slot.lecturer}</span>
+                                                <span className="truncate">{slot.className || slot.lecturer}</span>
                                             </div>
                                         </div>
 

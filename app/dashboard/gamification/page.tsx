@@ -60,7 +60,7 @@ export default async function GamificationPage() {
     });
 
     return (
-        <main className="md:p-8 max-w-5xl mx-auto space-y-10 pb-20">
+        <main className="md:p-8 mx-auto space-y-10 pb-20">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Rewards & Streak</h1>
@@ -139,12 +139,12 @@ export default async function GamificationPage() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                                            {userStat.user.name || 'Anonymous User'}
+                                            {(userStat as any).user.name || 'Anonymous User'}
                                             {userStat.userId === session.user.id && <span className="ml-2 text-xs font-normal text-brand-600">(You)</span>}
                                         </p>
                                         <div className="flex items-center gap-3 mt-1">
                                             <span className="text-xs text-gray-500 font-medium flex items-center gap-1"><Star className="w-3 h-3 text-yellow-400" /> {userStat.points} pts</span>
-                                            <span className="text-xs text-gray-500 font-medium flex items-center gap-1"><Flame className="w-3 h-3 text-orange-400" /> {userStat.classAttendanceStreak} streak</span>
+                                            <span className="text-xs text-gray-500 font-medium flex items-center gap-1"><Flame className="w-3 h-3 text-orange-400" /> {(userStat as any).classAttendanceStreak} streak</span>
                                         </div>
                                     </div>
                                 </div>

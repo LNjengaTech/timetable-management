@@ -78,21 +78,26 @@ async function extractFromImageOrScannedPdf(
         .join("\n");
 }
 
-async function structureWithGemini(rawText: string, instruction?: string): Promise<any[]> {
+async function structureWithGemini(rawText: string, instruction: string | undefined, role: string): Promise<any[]> {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) throw new Error("GEMINI_API_KEY not set in environment");
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    const prompt = `You are a timetable parser. The following is raw text extracted from a student timetable document. 
+    const isLecturer = role === "LECTURER";
+    const dynamicFieldDesc = isLecturer
+        ? "- className (string) — the name of the cohort/student group or class name being taught, use \"TBA\" if unknown. Omit the lecturer key completely."
+        : "- lecturer (string) — instructor name, use \"TBA\" if unknown. Omit the className key completely.";
+
+    const prompt = `You are a timetable parser. The following is raw text extracted from a timetable document. 
 
 Convert it into a valid JSON array of class slots. Each object must have exactly these keys:
 - subject (string) — course name
 - day (string) — one of: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 - time (string) — 24-hour format HH:MM e.g. "09:00"
 - location (string) — room or venue, use "TBA" if unknown
-- lecturer (string) — instructor name, use "TBA" if unknown
+${dynamicFieldDesc}
 
 Rules:
 - If a class repeats on multiple days, create one entry per day.
@@ -163,7 +168,7 @@ export async function POST(req: Request) {
             );
         }
 
-        const slots = await structureWithGemini(rawText, instruction || undefined);
+        const slots = await structureWithGemini(rawText, instruction || undefined, session.user.role);
 
         if (!Array.isArray(slots) || slots.length === 0) {
             return NextResponse.json(

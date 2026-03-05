@@ -3,6 +3,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSession } from "next-auth/react"
 import { Bar } from "react-chartjs-2"
 import {
     Chart as ChartJS,
@@ -31,6 +32,7 @@ interface Slot {
     time: string
     location: string
     lecturer: string
+    className?: string | null
     attended?: boolean
 }
 
@@ -40,6 +42,8 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ todaySlots, attendanceTrend }: DashboardClientProps) {
+    const { data: session } = useSession()
+    const isLecturer = session?.user?.role === "LECTURER"
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
 
     const chartData = {
@@ -130,7 +134,7 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
                                                     </h4>
                                                     <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
                                                         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {slot.location}</span>
-                                                        <span className="flex items-center gap-1"><User className="w-3 h-3" /> {slot.lecturer}</span>
+                                                        <span className="flex items-center gap-1"><User className="w-3 h-3" /> {slot.className || slot.lecturer}</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -145,36 +149,39 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
                                                 </div>
                                             </div>
 
-                                            <AnimatePresence>
-                                                {selectedSlot === slot.id && (
-                                                    <motion.div
-                                                        initial={{ height: 0, opacity: 0 }}
-                                                        animate={{ height: "auto", opacity: 1 }}
-                                                        exit={{ height: 0, opacity: 0 }}
-                                                        className="overflow-hidden pt-4 mt-4 border-t border-gray-100 dark:border-gray-700"
-                                                    >
-                                                        <div className="flex gap-2 text-sm">
-                                                            <button
-                                                                onClick={async (e) => {
-                                                                    e.stopPropagation();
-                                                                    try {
-                                                                        await fetch('/api/attendance/mark', {
-                                                                            method: 'POST',
-                                                                            headers: { 'Content-Type': 'application/json' },
-                                                                            body: JSON.stringify({ timetableId: slot.id })
-                                                                        });
-                                                                        window.location.reload();
-                                                                    } catch (err) {
-                                                                        console.error(err);
-                                                                    }
-                                                                }}
-                                                                className="flex-1 py-1.5 px-3 bg-brand-600 text-white rounded-lg font-bold text-xs hover:bg-brand-500 transition-colors">
-                                                                Mark Attended
-                                                            </button>
-                                                        </div>
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
+                                            {/* Hide Mark Attended for Lecturers */}
+                                            {!isLecturer && (
+                                                <AnimatePresence>
+                                                    {selectedSlot === slot.id && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: "auto", opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            className="overflow-hidden pt-4 mt-4 border-t border-gray-100 dark:border-gray-700"
+                                                        >
+                                                            <div className="flex gap-2 text-sm">
+                                                                <button
+                                                                    onClick={async (e) => {
+                                                                        e.stopPropagation();
+                                                                        try {
+                                                                            await fetch('/api/attendance/mark', {
+                                                                                method: 'POST',
+                                                                                headers: { 'Content-Type': 'application/json' },
+                                                                                body: JSON.stringify({ timetableId: slot.id })
+                                                                            });
+                                                                            window.location.reload();
+                                                                        } catch (err) {
+                                                                            console.error(err);
+                                                                        }
+                                                                    }}
+                                                                    className="flex-1 py-1.5 px-3 bg-brand-600 text-white rounded-lg font-bold text-xs hover:bg-brand-500 transition-colors">
+                                                                    Mark Attended
+                                                                </button>
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            )}
                                         </div>
                                     </motion.div>
                                 )
@@ -197,9 +204,9 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
                     <p className="mt-4 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                         Attendance visualization helps you track consistency. Keep up the high performance!
                     </p>
-                    <button className="w-full mt-6 py-3 px-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
+                    {/* <button className="w-full mt-6 py-3 px-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
                         View Full Report <ChevronRight className="w-4 h-4" />
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>
