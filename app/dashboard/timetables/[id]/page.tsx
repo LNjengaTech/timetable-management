@@ -8,15 +8,17 @@ import prisma from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
 import TimetableViewClient from "./TimetableViewClient"
 
-export default async function TimetableViewPage({ params }: { params: { id: string } }) {
+export default async function TimetableViewPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
     redirect("/auth/login")
   }
 
+  const { id } = await params
+
   const timetable = await prisma.timetable.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       attendances: {
         include: {
@@ -56,9 +58,9 @@ export default async function TimetableViewPage({ params }: { params: { id: stri
           </span>
         </div>
 
-        <TimetableViewClient 
-          timetableId={timetable.id} 
-          role={session.user.role} 
+        <TimetableViewClient
+          timetableId={timetable.id}
+          role={session.user.role}
           userId={session.user.id}
           attendances={timetable.attendances as any[]}
         />

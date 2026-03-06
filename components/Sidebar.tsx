@@ -8,7 +8,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
-import { Menu, X, Home, Calendar as CalendarIcon, PieChart, Settings, Users, LogOut, Sun, Moon, Table, Trophy } from "lucide-react"
+import { Menu, X, Home, Calendar as CalendarIcon, PieChart, Settings, Users, LogOut, Sun, Moon, Table, Trophy, BookOpen } from "lucide-react"
 import clsx from "clsx"
 
 export function Sidebar() {
@@ -30,6 +30,7 @@ export function Sidebar() {
         { name: "Manage Slots", href: "/dashboard/timetables", icon: Table, show: true },
         { name: "Interactive Calendar", href: "/dashboard/calendar", icon: CalendarIcon, show: role === "STUDENT" },
         { name: "Rewards & Streak", href: "/dashboard/gamification", icon: Trophy, show: role === "STUDENT" },
+        { name: "My Notes", href: "/dashboard/notes", icon: BookOpen, show: true },
         { name: "Analytics", href: "/dashboard/analytics", icon: PieChart, show: ["ADMIN", "LECTURER"].includes(role || "") },
         { name: "Settings", href: "/dashboard/settings", icon: Settings, show: true },
     ]

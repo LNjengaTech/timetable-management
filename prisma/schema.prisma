@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   timetables    Timetable[]
   attendances          Attendance[]
+  notes                Note[]
   stats                UserStats?
   notificationLeadTime Int          @default(30)
   createdAt            DateTime     @default(now())
@@ -78,6 +79,7 @@ model Timetable {
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   attendances Attendance[]
   homeworks   Homework[]
+  notes       Note[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
@@ -125,4 +127,22 @@ model UserStats {
   badges                String[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  fileUrl     String   // relative path for serving the PDF
+  fileName    String   // original filename for display
+  isPublic    Boolean  @default(false)
+  subject     String   // denormalized from Timetable.subject for public visibility queries
+  timetableId String
+  userId      String
+
+  timetable Timetable @relation(fields: [timetableId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

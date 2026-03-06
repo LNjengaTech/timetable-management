@@ -4,10 +4,10 @@
 
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Pencil, Trash2, CheckCircle2, MapPin, User, Clock, Plus, UploadCloud } from "lucide-react"
+import { Pencil, Trash2, CheckCircle2, MapPin, User, Clock, Plus, UploadCloud, BookOpen } from "lucide-react"
 
 type Slot = {
     id: string
@@ -36,7 +36,13 @@ function isInClassWindow(slotDay: string, slotTime: string): boolean {
     return nowMins >= slotMins - 15 && nowMins <= slotMins + 60
 }
 
-export default function TimetablesClientPage({ initialSlots }: { initialSlots: Slot[] }) {
+export default function TimetablesClientPage({
+    initialSlots,
+    noteCounts = {},
+}: {
+    initialSlots: Slot[]
+    noteCounts?: Record<string, number>
+}) {
     const router = useRouter()
     const [slots, setSlots] = useState<Slot[]>(initialSlots)
     const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -178,6 +184,17 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                                 <div className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium rounded-lg border border-green-200 dark:border-green-800">
                                                     <CheckCircle2 className="w-4 h-4" /> Attended
                                                 </div>
+                                            )}
+                                            {/* Notes button – appears when the slot has at least one note */}
+                                            {(noteCounts[slot.id] ?? 0) > 0 && (
+                                                <Link
+                                                    href={`/dashboard/notes?timetableId=${slot.id}`}
+                                                    className="flex items-center gap-1.5 px-2.5 py-2 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 border border-purple-100 dark:border-purple-800 rounded-lg transition-colors"
+                                                    title={`${noteCounts[slot.id]} note${noteCounts[slot.id] !== 1 ? 's' : ''}`}
+                                                >
+                                                    <BookOpen className="w-3.5 h-3.5" />
+                                                    Notes&nbsp;({noteCounts[slot.id]})
+                                                </Link>
                                             )}
                                             <Link
                                                 href={`/dashboard/timetables/edit/${slot.id}`}
