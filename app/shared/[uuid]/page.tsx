@@ -5,9 +5,11 @@
 import prisma from "@/lib/prisma"
 import { notFound } from "next/navigation"
 
-export default async function SharedTimetablePage({ params }: { params: { uuid: string } }) {
+export default async function SharedTimetablePage({ params }: { params: Promise<{ uuid: string }> }) {
+  const { uuid } = await params
+
   const timetable = await prisma.timetable.findUnique({
-    where: { id: params.uuid },
+    where: { id: uuid },
     include: {
       homeworks: {
         orderBy: { createdAt: 'desc' }
@@ -25,7 +27,7 @@ export default async function SharedTimetablePage({ params }: { params: { uuid: 
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-600/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl -z-10 -translate-x-1/2 translate-y-1/2"></div>
-        
+
         <div className="flex justify-between items-start mb-8 z-10 relative">
           <div>
             <h1 className="text-3xl font-black text-white mb-2">{timetable.subject}</h1>

@@ -1,6 +1,6 @@
 // api/timetables/[id]/route.ts
 
-// timetable routes - for updating and deleting a specific timetable slot
+//timetable routes - for updating and deleting a specific timetable slot
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

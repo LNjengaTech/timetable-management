@@ -1,6 +1,6 @@
 // api/notifications/route.ts
 
-// notification routes
+//notification routes
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

@@ -1,6 +1,6 @@
-// dashboard/analytics/AnalyticsDashboardClient.tsx
+//dashboard/analytics/AnalyticsDashboardClient.tsx
 
-// analytics dashboard client component - for fetching and displaying analytics data and attendance by subject
+//analytics dashboard client component - for fetching and displaying analytics data and attendance by subject
 "use client"
 
 import { useEffect, useState } from "react"

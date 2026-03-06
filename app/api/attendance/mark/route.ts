@@ -20,11 +20,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Missing timetableId" }, { status: 400 });
         }
 
-        // Determine "today" as the start of the current day
+        //Determine "today" as the start of the current day
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Check if the slot exists
+        //Check if the slot exists
         const timetable = await prisma.timetable.findUnique({
             where: { id: timetableId }
         });
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "You can only mark attendance for your own timetable slots" }, { status: 403 });
         }
 
-        // Check if already marked for today
+        //Check if already marked for today
         const existing = await prisma.attendance.findFirst({
             where: {
                 studentId: session.user.id,
@@ -53,21 +53,20 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Attendance already marked for today" }, { status: 409 });
         }
 
-        // Wrap attendance creation and stats update in a transaction
+        // Wraping attendance creation and stats update in a transaction
         const [attendance, stats] = await prisma.$transaction(async (tx) => {
             const att = await tx.attendance.create({
                 data: {
                     studentId: session.user.id,
                     timetableId,
-                    date: today, // using the normalized 'today' date
+                    date: today, //using the normalized 'today' date
                 }
             });
 
             // Gamification Logic
             let userStats = await tx.userStats.findUnique({ where: { userId: session.user.id } });
 
-            // Check punctuality: within first 5 mins of lecture (for now we assume if they mark it on the same day it's on time, but wait, do we have slot time?)
-            // We have `timetable.time` (e.g. '09:00 - 10:00').
+            //Check punctuality: within first 5 mins of lecture
             let punctualityBonus = 0;
             if (timetable.time) {
                 const startTimeStr = timetable.time.split('-')[0]?.trim(); // "09:00"
@@ -79,9 +78,9 @@ export async function POST(req: Request) {
                         slotStartTime.setHours(hours, minutes, 0, 0);
                         const diffMins = (now.getTime() - slotStartTime.getTime()) / (1000 * 60);
 
-                        // within 5 minutes of start time or 5 mins before
+                        //within 5 minutes of start time or 5 mins before
                         if (diffMins >= -5 && diffMins <= 5) {
-                            punctualityBonus = 5; // Extra points for punctuality
+                            punctualityBonus = 5; //extra points for punctuality
                         }
                     }
                 }

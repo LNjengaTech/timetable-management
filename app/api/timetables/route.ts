@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
         const { day, time, subject, location, lecturer, className } = parsed.data;
 
-        // Conflict Check: existing slot with same day, time, and location FOR THIS USER
+        //Conflict Check: existing slot with same day, time, and location FOR THIS USER
         const existingSlot = await prisma.timetable.findFirst({
             where: {
                 day,
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Conflict detected: slot exists at this day/time/location." }, { status: 409 });
         }
 
-        // Ensure the required field based on the role is provided or default it
+        //Ensure the required field based on the role is provided or default it
         const finalLecturer = lecturer || (session.user.role !== "LECTURER" ? "TBA" : "");
         const finalClassName = className || (session.user.role === "LECTURER" ? "TBA" : null);
 

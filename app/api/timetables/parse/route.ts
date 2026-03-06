@@ -1,6 +1,6 @@
 // api/timetables/parse/route.ts
 
-// timetable parse routes - for parsing the timetable files uploaded by the user
+//timetable parse routes - for parsing the timetable files uploaded by the user
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

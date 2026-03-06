@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 
-/** POST /api/notes  – upload a new note (PDF) tied to a timetable slot */
+/**POST /api/notes  – upload a new note (PDF) tied to a timetable slot */
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);

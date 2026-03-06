@@ -1,6 +1,6 @@
 // api/analytics/route.ts
 
-// analytics routes
+//analytics routes
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -19,8 +19,7 @@ export async function GET(req: Request) {
         const totalSlots = await prisma.timetable.count();
 
         // Aggregate attendances by subject
-        // Note: Prisma string grouping can be complex, so we'll fetch relations and map in memory
-        // In a prod app, raw SQL grouping is preferred for performance 
+        //Prisma string grouping is be complex, so I'll just fetch relations and map in memory. In prod, raw SQL grouping is preferred
         const timetables = await prisma.timetable.findMany({
             include: {
                 _count: {
