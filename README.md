@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ClassFlow: AI-Powered Academic Management System
 
-## Getting Started
+ClassFlow is a modern, platform designed to streamline student schedules through AI and encourage consistency through gamification. This project leverages cutting-edge technologies like Google Gemini, OCR.space, and Cloudinary to automate the "administrative overhead" of being a student.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Core Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🤖 AI Timetable Extraction
+- **Multi-Modal Data Ingestion**: Upload XLSX spreadsheets, native PDFs, or even photos of physical university timetables.
+- **Smart Parsing**: Uses OCR.space to read text from images/scanned documents.
+- **AI Structuring**: Uses Google Gemini 2.5 Flash to intelligently extract subjects, locations, and timings from unstructured text.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🎮 Behavioral Gamification
+- **Attendance Streaks**: Encourages regular attendance through daily streaks.
+- **Punctuality Rewards**: Earn bonus points for marking attendance within the class start window.
+- **Badges & Perfection**: Unlock achievements for consistent weekly perfection and points milestones.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 📝 Smart Notes Management
+- **Subject-Linked Notes**: PDF notes are automatically organized by their respective timetable subjects.
+- **Cloud Storage**: Secure, high-speed storage of PDF materials via Cloudinary integration.
+- **Social Learning**: Mark notes as "Public" to share them with other students studying the same subject.
 
-## Learn More
+### 🛡️ Secure Access Control
+- **Role-Based Permissions**: Distinct interfaces for Admins, Lecturers, Students, and Guests.
+- **NextAuth Integration**: Secure sessions with JWT and Bcrypt password hashing.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL with [Prisma ORM](https://www.prisma.io/)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
+- **AI/ML**: [Google Gemini AI](https://aistudio.google.com/) & [OCR.space](https://ocr.space/)
+- **File Storage**: [Cloudinary](https://cloudinary.com/)
+- **Styling**: Tailwind CSS 4 & Framer Motion (for animations)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚦 Getting Started
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 📋 Prerequisites
+
+Before you begin, ensure you have the following installed. If you don't have them, follow the links to install:
+
+1.  **Git**: For version control.
+    *   [Download and Install Git if you don't have it](https://git-scm.com/downloads)
+    *   *Check version:* `git --version`
+
+2.  **Node.js (18.x or later)**: The JavaScript runtime that powers the app.
+    *   [Download Node.js](https://nodejs.org/)
+    *   *Check version:* `node -v`
+
+3.  **Docker & Docker Compose**: Used to run the PostgreSQL database easily.
+    *   [Install Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac)
+    *   [Install Docker Engine](https://docs.docker.com/engine/install/) (Linux)
+    *   *Check version:* `docker --version`
+
+4.  **PostgreSQL** You do not need to install it in this project if you have Docker installed. If you prefer not to use Docker, you'll need a local PostgreSQL instance.
+
+---
+
+### ⚙️ Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/LNjengaTech/timetable-management
+   cd project
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Database Setup**
+   If you have Docker installed, you can start the database using:
+   ```bash
+   docker-compose up -d
+   ```
+   *Note: This will start a PostgreSQL container in the background.*
+
+4. **Environment Variables Setup**
+   Create a `.env` file in the root directory and add your variables (refer to `.env.example` or the list below):
+   ```env
+   # Database
+   DATABASE_URL="postgresql://user:password@localhost:5432/db_name?schema=public"
+
+   # NextAuth
+   NEXTAUTH_URL="http://localhost:3000"
+   NEXTAUTH_SECRET="your-secret-key"
+
+   # AI APIs
+   GEMINI_API_KEY="your-gemini-api-key"
+   OCR_SPACE_API_KEY="your-ocr-space-api-key"
+
+   # Cloudinary
+   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your-cloud-name"
+   CLOUDINARY_API_KEY="your-api-key"
+   CLOUDINARY_API_SECRET="your-api-secret"
+   NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="your-upload-preset"
+   ```
+
+4. **Database Initialization**
+   Run the Prisma migration to set up your database schema:
+   ```bash
+   npx prisma migrate dev --name init
+   # or simply
+   npx prisma generate
+   ```
+
+5. **Run the Development Server**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📁 Project Structure
+
+- `app/api`: Server-side API routes for AI parsing, attendance, and notes.
+- `app/auth`: Login and registration page logic.
+- `app/dashboard`: Interactive user dashboards and analytics.
+- `components`: Reusable UI components (buttons, cards, grids).
+- `lib`: Core utility functions (Cloudinary integration, Auth options, AI logic).
+- `prisma`: Database schema definition and migrations.
+
+---
+
+## 📝 License
+This project is proprietary. Please check with the project owner for licensing details.
