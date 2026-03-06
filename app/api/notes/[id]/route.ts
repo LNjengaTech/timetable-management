@@ -5,8 +5,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { unlink } from "fs/promises";
-import path from "path";
+import { deleteFromCloudinary, getPublicIdFromUrl } from "@/lib/cloudinary";
 
 export async function DELETE(
     _req: Request,
@@ -32,12 +31,15 @@ export async function DELETE(
             return NextResponse.json({ message: "Forbidden" }, { status: 403 });
         }
 
-        // Delete from disk
+        // Delete from Cloudinary
         try {
-            const diskPath = path.join(process.cwd(), "public", note.fileUrl);
-            await unlink(diskPath);
-        } catch {
-            // File might already be missing – continue to delete DB record
+            const publicId = getPublicIdFromUrl(note.fileUrl);
+            if (publicId) {
+                await deleteFromCloudinary(publicId);
+            }
+        } catch (error) {
+            console.error("Cloudinary delete error:", error);
+            // Continue to delete DB record even if cloud delete fails
         }
 
         await prisma.note.delete({ where: { id } });

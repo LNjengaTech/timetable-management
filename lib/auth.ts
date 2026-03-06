@@ -12,7 +12,7 @@ import { Role } from "@prisma/client"
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma) as any,
-    
+
     session: {
         strategy: "jwt", //employ JWT for session management rather than database-stored sessions
     },
@@ -33,8 +33,10 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid credentials")
                 }
 
+                const sanitizedEmail = credentials.email.trim().toLowerCase();
+
                 const user = await prisma.user.findUnique({
-                    where: { email: credentials.email },
+                    where: { email: sanitizedEmail },
                 })
 
                 if (!user || !user.password) {
@@ -55,13 +57,13 @@ export const authOptions: NextAuthOptions = {
         //jwt callback to attach user's id and role from the database to the token upon login
         async jwt({ token, user, trigger, session }) {
             if (user) {
-        return {
-            ...token,
-            id: user.id,
-            role: user.role,
-        }
-    }
-    return token;
+                return {
+                    ...token,
+                    id: user.id,
+                    role: user.role,
+                }
+            }
+            return token;
         },
         //session callback then passes that data from the token into the client-side session object, making 'session.user.role' accessible in components
         async session({ session, token }) {

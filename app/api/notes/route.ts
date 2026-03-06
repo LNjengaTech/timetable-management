@@ -5,8 +5,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 /** POST /api/notes  – upload a new note (PDF) tied to a timetable slot */
 export async function POST(req: Request) {
@@ -40,18 +39,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Timetable slot not found" }, { status: 404 });
         }
 
-        // Save file to /public/uploads/notes/<userId>/<unique-name>.pdf
-        const uploadDir = path.join(process.cwd(), "public", "uploads", "notes", session.user.id);
-        await mkdir(uploadDir, { recursive: true });
+        // Upload to Cloudinary
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const cloudinaryRes = await uploadToCloudinary(buffer, `classflow/notes/${session.user.id}`);
 
-        const safeOrigName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const uniqueName = `${Date.now()}_${safeOrigName}`;
-        const filePath = path.join(uploadDir, uniqueName);
-        const bytes = await file.arrayBuffer();
-        await writeFile(filePath, Buffer.from(bytes));
-
-        // Relative URL served by Next.js from /public
-        const fileUrl = `/uploads/notes/${session.user.id}/${uniqueName}`;
+        const fileUrl = cloudinaryRes.secure_url;
 
         const note = await prisma.note.create({
             data: {
