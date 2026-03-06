@@ -84,7 +84,7 @@ export default function DashboardClient({ todaySlots, attendanceTrend }: Dashboa
         slotTime.setHours(hours, minutes, 0, 0)
 
         if (now < slotTime) return "upcoming"
-        //Assume 3 hour class for simplicity
+        // Assume 3 hour class for simplicity
         const endTime = new Date(slotTime)
         endTime.setHours(endTime.getHours() + 3)
         if (now >= slotTime && now <= endTime) return "now"

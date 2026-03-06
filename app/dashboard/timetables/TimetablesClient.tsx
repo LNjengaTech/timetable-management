@@ -126,7 +126,7 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                 return (
                                     <div
                                         key={slot.id}
-                                        className={`relative bg-white dark:bg-gray-800 border rounded-2xl p-5 flex flex-col gap-3 shadow-sm transition-all ${inWindow
+                                        className={`relative  bg-white dark:bg-gray-800 border-2 rounded-2xl p-5 flex flex-col gap-3 shadow-sm transition-all ${inWindow
                                             ? "border-brand-400 dark:border-brand-600 ring-2 ring-brand-400/30 dark:ring-brand-600/30"
                                             : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                                             }`}
@@ -171,7 +171,7 @@ export default function TimetablesClientPage({ initialSlots }: { initialSlots: S
                                                     disabled={markingId === slot.id}
                                                     className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm rounded-lg transition-all disabled:opacity-60 shadow-sm"
                                                 >
-                                                    {markingId === slot.id ? "Marking…" : "✓ Mark Attended"}
+                                                    {markingId === slot.id ? "Marking…" : "Mark Attended"}
                                                 </button>
                                             )}
                                             {alreadyMarked && (

@@ -145,12 +145,11 @@ function LandingContent() {
               <div className="w-20 h-1.5 bg-brand-600 mx-auto rounded-full" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 { icon: Clock, title: "Upload in Seconds", desc: "Drag and drop your PDF or image timetable and let AI do the work." },
                 { icon: CheckCircle, title: "Smart Reminders", desc: "Get notified before every class via browser or mobile alerts." },
                 { icon: Award, title: "Earn Badges", desc: "Level up your academic streak and earn rewards for attendance." },
-                { icon: Users, title: "Share with Buddies", desc: "Sync timetables with friends and coordinate study groups effortlessly." }
               ].map((prop, idx) => (
                 <motion.div
                   key={idx}
