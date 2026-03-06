@@ -8,15 +8,20 @@ import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { Role } from "@prisma/client"
 
+//NextAuth's CredentialsProvider - handles authorization.
+
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma) as any,
+    
     session: {
-        strategy: "jwt",
+        strategy: "jwt", //employ JWT for session management rather than database-stored sessions
     },
+    //redirect users to a custom /auth/login page instead of the default NextAuth sign-in screen
     pages: {
         signIn: "/auth/login",
     },
     providers: [
+        //allowing users to log in with an email and password.manually queries the db, verify user exists, & checks the hashed password using bcrypt
         CredentialsProvider({
             name: "Credentials",
             credentials: {
@@ -33,7 +38,7 @@ export const authOptions: NextAuthOptions = {
                 })
 
                 if (!user || !user.password) {
-                    throw new Error("User not found or using OAuth")
+                    throw new Error("User not found")
                 }
 
                 const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
@@ -47,8 +52,8 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
+        //jwt callback to attach user's id and role from the database to the token upon login
         async jwt({ token, user, trigger, session }) {
-            //Initial sign-in: transfer user data to the token
             if (user) {
         return {
             ...token,
@@ -58,6 +63,7 @@ export const authOptions: NextAuthOptions = {
     }
     return token;
         },
+        //session callback then passes that data from the token into the client-side session object, making 'session.user.role' accessible in components
         async session({ session, token }) {
             if (token && session.user) {
                 session.user.id = token.id

@@ -69,6 +69,7 @@ export async function POST(req: Request) {
             where: { userId: session.user.id },
             data: {
                 currentStreak: newStreak,
+                classAttendanceStreak: newStreak, // Keep in sync
                 longestStreak: Math.max(newStreak, stats.longestStreak),
                 lastCheckIn: today,
                 points: stats.points + pointsEarned

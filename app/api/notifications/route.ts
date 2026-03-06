@@ -10,13 +10,10 @@ export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        if (!session || !session.user?.id) {
+            return NextResponse.json({ message: "Unauthorized or missing User ID" }, { status: 401 });
         }
 
-        // A real app would complexly join Group configurations.
-        // Here we find ALL timetables and just check time, or filter by user's enrolled subjects.
-        // For simplicity: return timetables that are happening today up next.
         const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const today = new Date();
         const currentDayName = days[today.getDay()];
@@ -30,7 +27,7 @@ export async function GET(req: Request) {
             select: { notificationLeadTime: true }
         });
 
-        const leadTime = dbUser?.notificationLeadTime || 30;
+        const leadTime = dbUser?.notificationLeadTime ?? 30;
 
         const timetables = await prisma.timetable.findMany({
             where: {
@@ -39,21 +36,29 @@ export async function GET(req: Request) {
             }
         });
 
-        // Determine upcoming based on user's preference
         const upcoming = timetables.filter(t => {
-            const [tHour, tMin] = t.time.split(':').map(Number);
+            if (!t.time) return false;
+
+            // Handle both "HH:MM" and "HH:MM - HH:MM" formats safely
+            const timePart = t.time.split('-')[0].trim();
+            const [tHour, tMin] = timePart.split(':').map(Number);
+
+            if (isNaN(tHour) || isNaN(tMin)) return false;
 
             const tTimeInMins = tHour * 60 + tMin;
             const cTimeInMins = currentHour * 60 + currentMinute;
 
             const diff = tTimeInMins - cTimeInMins;
-
-            // Between 0 and leadTime away
             return diff > 0 && diff <= leadTime;
         });
 
         return NextResponse.json({ upcoming }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    } catch (error: any) {
+        console.error("Notification API Error:", error);
+        return NextResponse.json({
+            message: "Internal Server Error",
+            error: error?.message || "Unknown error",
+            stack: process.env.NODE_ENV === "development" ? error?.stack : undefined
+        }, { status: 500 });
     }
 }

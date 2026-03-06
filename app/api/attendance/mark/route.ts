@@ -93,8 +93,10 @@ export async function POST(req: Request) {
                         userId: session.user.id,
                         points: 10 + punctualityBonus,
                         classAttendanceStreak: 1,
+                        currentStreak: 1, // Unify Streaks
                         longestStreak: 1,
                         lastAttendance: today,
+                        lastCheckIn: today, // Unify Streaks
                     }
                 });
             } else {
@@ -165,8 +167,10 @@ export async function POST(req: Request) {
                     data: {
                         points: futurePoints,
                         classAttendanceStreak: newStreak,
+                        currentStreak: newStreak, // Unify Streaks
                         longestStreak: Math.max(newStreak, userStats.longestStreak),
                         lastAttendance: today,
+                        lastCheckIn: today, // Unify Streaks
                         perfectWeeks: userStats.perfectWeeks + extraPerfectWeeks,
                         // Append new badges if any
                         ...(badgesToAward.length > 0 && { badges: [...currentBadges, ...badgesToAward] })

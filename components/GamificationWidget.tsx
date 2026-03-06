@@ -42,17 +42,11 @@ export default async function GamificationWidget() {
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-6">
           <div className=" dark:bg-gray-900/80 p-4 rounded-xl border border-gray-700/50 flex flex-col items-center justify-center text-center">
             <Flame className={`w-8 h-8 mb-2 ${dailyStreak > 0 ? 'text-orange-500 animate-pulse' : 'text-gray-500'}`} />
             <span className="text-2xl font-black text-gray-900 dark:text-white">{dailyStreak}</span>
-            <span className="text-xs text-gray-900 dark:text-gray-400 font-medium uppercase tracking-wider mt-1">Daily Streak</span>
-          </div>
-
-          <div className=" dark:bg-gray-900/80 p-4 rounded-xl border border-gray-700/50 flex flex-col items-center justify-center text-center">
-            <Flame className={`w-8 h-8 mb-2 ${classStreak > 0 ? 'text-red-500 animate-pulse' : 'text-gray-500'}`} />
-            <span className="text-2xl font-black text-gray-900 dark:text-white">{classStreak}</span>
-            <span className="text-xs text-gray-900 dark:text-gray-400 font-medium uppercase tracking-wider mt-1">Class Streak</span>
+            <span className="text-xs text-gray-900 dark:text-gray-400 font-medium uppercase tracking-wider mt-1">Consistency Streak</span>
           </div>
 
           <div className=" dark:bg-gray-900/80 p-4 rounded-xl border border-gray-700/50 flex flex-col items-center justify-center text-center">

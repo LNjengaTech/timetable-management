@@ -31,7 +31,7 @@ export default async function DashboardPage() {
     },
     orderBy: { time: 'asc' }
   })
-
+  
   // Fetch all slots to calculate attendance rate properly
   const allSlots = await prisma.timetable.findMany({
     where: { userId: session.user.id },
