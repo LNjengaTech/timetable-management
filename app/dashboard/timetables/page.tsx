@@ -45,5 +45,17 @@ export default async function TimetablesPage() {
     isAttendedToday: t.attendances.length > 0
   }))
 
-  return <TimetablesClient initialSlots={timetables} />
+  // Fetch note counts per timetable slot (own notes only for the badge)
+  const timetableIds = timetables.map(t => t.id)
+  const noteCountsRaw = await prisma.note.groupBy({
+    by: ["timetableId"],
+    where: { timetableId: { in: timetableIds } },
+    _count: { id: true },
+  })
+  const noteCounts: Record<string, number> = {}
+  for (const row of noteCountsRaw) {
+    noteCounts[row.timetableId] = row._count.id
+  }
+
+  return <TimetablesClient initialSlots={timetables} noteCounts={noteCounts} />
 }

@@ -6,14 +6,19 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password, role } = await req.json();
+        let { name, email, password, role } = await req.json();
+
+        // Sanitization
+        name = name?.trim();
+        email = email?.trim().toLowerCase();
+        password = password?.trim();
 
         if (!name || !email || !password) {
             return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
         }
 
         const validRoles = ["STUDENT", "LECTURER"];
-        
+
         const userRole = validRoles.includes(role) ? role : "STUDENT";
 
         const existingUser = await prisma.user.findUnique({
