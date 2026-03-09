@@ -145,9 +145,9 @@ export default function TimetableViewClient({ timetableId, role, userId, attenda
             <button
               onClick={handleMarkAttendance}
               disabled={loading}
-              className="px-10 py-4 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white font-bold text-lg rounded-full shadow-lg shadow-brand-600/30 dark:shadow-brand-900/40 transition-all disabled:opacity-50"
+              className="px-5 md:px-10 py-2 md:py-4 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white font-bold text-lg rounded-full shadow-lg shadow-brand-600/30 dark:shadow-brand-900/40 transition-all disabled:opacity-50"
             >
-              {loading ? "Marking..." : "✓ Mark Attendance"}
+              {loading ? "Marking..." : "Mark Attendance"}
             </button>
             {message && (
               <p className={`mt-3 text-sm font-medium ${message.includes('🎉') || message.includes('marked') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
@@ -161,7 +161,7 @@ export default function TimetableViewClient({ timetableId, role, userId, attenda
       {/* ===== QR Code Section (toggled by Lecturers/Admins) ===== */}
       {showQR && (
         <div className="bg-white p-6 rounded-2xl flex flex-col items-center justify-center shadow-md border border-gray-100">
-          <h3 className="text-gray-800 font-bold mb-4 text-lg">QR Code – Scan to Check-In</h3>
+          <h3 className="text-gray-800 font-bold mb-4 text-lg">QR Code - Scan to Check-In</h3>
           {qrCodeUrl ? (
             <img src={qrCodeUrl} alt="QR Code for Attendance Check In" className="w-64 h-64 border border-gray-200 rounded-lg" />
           ) : (

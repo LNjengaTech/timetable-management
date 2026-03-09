@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
-import { User, GraduationCap, ChevronRight } from "lucide-react"
+import { User, GraduationCap, ChevronRight, Eye, EyeOff, Lock } from "lucide-react"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -16,6 +16,9 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("")
   const [role, setRole] = useState("STUDENT")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,8 +67,8 @@ export default function RegisterPage() {
               type="button"
               onClick={() => setRole("STUDENT")}
               className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${role === "STUDENT"
-                  ? "border-brand-600 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400"
-                  : "border-gray-100 dark:border-gray-700 hover:border-brand-200"
+                ? "border-brand-600 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400"
+                : "border-gray-100 dark:border-gray-700 hover:border-brand-200"
                 }`}
             >
               <User className="w-8 h-8" />
@@ -75,8 +78,8 @@ export default function RegisterPage() {
               type="button"
               onClick={() => setRole("LECTURER")}
               className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${role === "LECTURER"
-                  ? "border-brand-600 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400"
-                  : "border-gray-100 dark:border-gray-700 hover:border-brand-200"
+                ? "border-brand-600 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400"
+                : "border-gray-100 dark:border-gray-700 hover:border-brand-200"
                 }`}
             >
               <GraduationCap className="w-8 h-8" />
@@ -109,17 +112,45 @@ export default function RegisterPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
-                className="w-full px-5 py-4 mt-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white placeholder-gray-400"
+                className="w-full pl-12 pr-12 py-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white placeholder-gray-400"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
+            
+            {/* Confirm Password Field */}
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                className={`w-full pl-12 pr-12 py-4 bg-gray-50 dark:bg-gray-900 border ${confirmPassword && password !== confirmPassword ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'} rounded-2xl focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white placeholder-gray-400`}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+
+            {/* Error Message */}
+            {confirmPassword && password !== confirmPassword && (
+              <p className="text-xs text-red-500 font-semibold mt-1 ml-2">
+                Passwords do not match
+              </p>
+            )}
           </div>
 
           <button

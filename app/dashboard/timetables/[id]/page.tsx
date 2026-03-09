@@ -40,7 +40,7 @@ export default async function TimetableViewPage({ params }: { params: Promise<{ 
 
   // Pass down data to a Client Component for interactivity (QR / Buttons)
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="max-w-4xl mx-auto p-2">
       <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8 shadow-xl">
         <h1 className="text-3xl font-bold text-white mb-2">{timetable.subject}</h1>
         <div className="text-gray-400 mb-8 space-x-4 flex flex-wrap gap-y-2">

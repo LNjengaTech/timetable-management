@@ -48,6 +48,11 @@ export default function UserTour() {
             placement: "bottom" as const,
         },
         {
+            target: "[href='/dashboard/notes']", 
+            content: "Add your notes which are tied to one of your subjects/units",
+            placement: "bottom" as const,
+        },
+        {
             target: "[href='/dashboard/settings']",
             content: "Manage your profile and preferences here.",
             placement: "bottom" as const,

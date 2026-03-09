@@ -135,7 +135,7 @@ export default function NotesClient({ slots, initialNotes, currentUserId, defaul
     }
 
     return (
-        <div className="max-w-5xl mx-auto md:p-8 p-4 space-y-8">
+        <div className="max-w-5xl mx-auto md:p-8 p-2 space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
@@ -143,7 +143,7 @@ export default function NotesClient({ slots, initialNotes, currentUserId, defaul
                         <BookOpen className="w-8 h-8 text-brand-600 dark:text-brand-400" />
                         My Notes
                     </h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Upload and manage PDF notes tied to your subjects
                     </p>
                 </div>
@@ -152,7 +152,7 @@ export default function NotesClient({ slots, initialNotes, currentUserId, defaul
                     className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg transition-colors shadow-sm text-sm"
                 >
                     {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                    {showForm ? "Cancel" : "Upload Note"}
+                    {showForm ? "Cancel" : "Upload"}
                 </button>
             </div>
 
