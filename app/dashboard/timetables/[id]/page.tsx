@@ -63,6 +63,7 @@ export default async function TimetableViewPage({ params }: { params: Promise<{ 
           role={session.user.role}
           userId={session.user.id}
           attendances={timetable.attendances as any[]}
+          homeworks={timetable.homeworks}
         />
       </div>
     </div>

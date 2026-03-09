@@ -99,6 +99,19 @@ export default function TimetableViewClient({ timetableId, role, userId, attenda
     }
   }
 
+  const handleDeleteHomework = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this note?")) return;
+
+    try {
+      const res = await fetch(`/api/homework/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        router.refresh(); // Syncs the UI with the server data
+      }
+    } catch (error) {
+      console.error("Failed to delete", error);
+    }
+  };
+
   const handleShare = () => {
     const url = `${window.location.origin}/shared/${timetableId}`
     navigator.clipboard.writeText(url)
@@ -230,12 +243,29 @@ export default function TimetableViewClient({ timetableId, role, userId, attenda
           {homeworks.length === 0 ? (
             <p className="text-gray-400 italic text-sm">No homework or notes have been added to this slot yet.</p>
           ) : (
+
             homeworks.map(hw => (
-              <div key={hw.id} className="p-4 bg-white dark:bg-gray-800 border-l-4 border-brand-500 rounded-lg shadow-sm">
-                <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{hw.title}</h4>
-                {hw.description && <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">{hw.description}</p>}
-                <span className="text-xs text-gray-400">Posted: {new Date(hw.createdAt).toLocaleDateString()}</span>
+              <div key={hw.id} className="group p-4 bg-white dark:bg-gray-800 border-l-4 border-brand-500 rounded-lg shadow-sm flex justify-between items-start">
+                <div>
+                  <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{hw.title}</h4>
+                  {hw.description && <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">{hw.description}</p>}
+                  <span className="text-xs text-gray-400">Posted: {new Date(hw.createdAt).toLocaleDateString()}</span>
+                </div>
+
+                {/* Delete button: Only visible to authorized roles on hover */}
+                {["ADMIN", "LECTURER"].includes(role) && (
+                  <button
+                    onClick={() => handleDeleteHomework(hw.id)}
+                    className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                    title="Delete note"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
+                  </button>
+                )}
               </div>
+
+
+
             ))
           )}
         </div>
