@@ -27,10 +27,10 @@ export function Sidebar() {
 
     const navigation = [
         { name: "Overview", href: "/dashboard", icon: Home, show: true },
-        { name: "Manage Slots", href: "/dashboard/timetables", icon: Table, show: true },
-        { name: "Interactive Calendar", href: "/dashboard/calendar", icon: CalendarIcon, show: role === "STUDENT" },
-        { name: "Rewards & Streak", href: "/dashboard/gamification", icon: Trophy, show: role === "STUDENT" },
+        { name: "Timetable Slots", href: "/dashboard/timetables", icon: Table, show: true },
+        { name: "Schedule Calendar", href: "/dashboard/calendar", icon: CalendarIcon, show: role === "STUDENT" },
         { name: "My Notes", href: "/dashboard/notes", icon: BookOpen, show: true },
+        { name: "Rewards & Streak", href: "/dashboard/gamification", icon: Trophy, show: role === "STUDENT" },
         { name: "Analytics", href: "/dashboard/analytics", icon: PieChart, show: ["ADMIN", "LECTURER"].includes(role || "") },
         { name: "Settings", href: "/dashboard/settings", icon: Settings, show: true },
     ]
